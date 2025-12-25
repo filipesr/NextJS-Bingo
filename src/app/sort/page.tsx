@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import Link from "next/link";
 import type { BingoMode } from "@/lib/bingo/types";
 import { useBingoSort } from "@/hooks/useBingoSort";
@@ -12,6 +12,7 @@ import { ThemeToggle } from "@/components/ThemeToggle";
  */
 export default function SortPage() {
   const [mode, setMode] = useState<BingoMode>("75");
+  const [sortOrder, setSortOrder] = useState<"chronological" | "numerical">("chronological");
   const { sortState, draw, reset, changeMode, hasMoreNumbers, drawnCount, totalNumbers } =
     useBingoSort(mode);
 
@@ -26,6 +27,14 @@ export default function SortPage() {
     setMode(newMode);
     changeMode(newMode);
   };
+
+  // Números ordenados conforme preferência do usuário
+  const displayedNumbers = useMemo(() => {
+    if (sortOrder === "numerical") {
+      return [...sortState.drawnNumbers].sort((a, b) => a - b);
+    }
+    return sortState.drawnNumbers;
+  }, [sortState.drawnNumbers, sortOrder]);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -80,7 +89,7 @@ export default function SortPage() {
           </h2>
           <div className="text-center">
             {sortState.currentNumber ? (
-              <div className="text-8xl font-bold text-warning-foreground drop-shadow-lg animate-pulse">
+              <div className="text-8xl font-bold drop-shadow-lg animate-pulse">
                 {sortState.currentNumber}
               </div>
             ) : (
@@ -128,16 +137,41 @@ export default function SortPage() {
 
         {/* Histórico de números sorteados */}
         <div className="bg-card rounded-lg p-6 border-2 border-border">
-          <h2 className="font-semibold text-lg mb-4">
-            📝 Números Sorteados ({sortState.drawnNumbers.length})
-          </h2>
+          <div className="flex justify-between items-center mb-4">
+            <h2 className="font-semibold text-lg">
+              📝 Números Sorteados ({sortState.drawnNumbers.length})
+            </h2>
+
+            {sortState.drawnNumbers.length > 0 && (
+              <button
+                onClick={() => setSortOrder(prev =>
+                  prev === "chronological" ? "numerical" : "chronological"
+                )}
+                className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring border-2 border-border"
+                aria-label="Alternar ordenação dos números"
+              >
+                {sortOrder === "chronological" ? (
+                  <>
+                    <span>⏱️</span>
+                    <span className="hidden sm:inline">Ordem de chamada</span>
+                  </>
+                ) : (
+                  <>
+                    <span>🔢</span>
+                    <span className="hidden sm:inline">Ordem crescente</span>
+                  </>
+                )}
+              </button>
+            )}
+          </div>
+
           {sortState.drawnNumbers.length === 0 ? (
             <p className="text-center text-muted-foreground py-8">
               Nenhum número sorteado ainda. Clique em &quot;Sortear Próximo&quot; para começar!
             </p>
           ) : (
             <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
-              {sortState.drawnNumbers.map((num, index) => (
+              {displayedNumbers.map((num, index) => (
                 <div
                   key={index}
                   className={`aspect-square flex items-center justify-center font-bold text-sm sm:text-base rounded border-2 ${
