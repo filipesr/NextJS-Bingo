@@ -100,9 +100,9 @@ export default function SortPage() {
                 </div>
 
                 {/* Apelido/chamada do número */}
-                {getNumberCall(sortState.currentNumber) && (
+                {getNumberCall(sortState.currentNumber, mode) && (
                   <div className="text-2xl mt-4 italic ">
-                    &quot;{getNumberCall(sortState.currentNumber)}&quot;
+                    &quot;{getNumberCall(sortState.currentNumber, mode)}&quot;
                   </div>
                 )}
               </>
