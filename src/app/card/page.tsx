@@ -52,7 +52,7 @@ export default function CardGeneratorPage() {
         </header>
 
         {/* Explicação */}
-        <div className="mb-8 bg-blue-50 dark:bg-blue-900 rounded-lg p-6 border-2 border-blue-300 dark:border-blue-700">
+        <div className="mb-8 bg-blue-100 dark:bg-blue-900 rounded-lg p-6 border-2 border-blue-300 dark:border-blue-700">
           <h2 className="font-semibold text-lg mb-3">ℹ️ Como funciona:</h2>
           <ul className="space-y-2 text-sm">
             <li>
@@ -124,7 +124,7 @@ export default function CardGeneratorPage() {
         </div>
 
         {/* Informações Adicionais */}
-        <div className="mt-8 bg-gray-50 dark:bg-gray-800 rounded-lg p-6 border-2 border-gray-300 dark:border-gray-700">
+        <div className="mt-8 bg-gray-100 dark:bg-gray-800 rounded-lg p-6 border-2 border-gray-300 dark:border-gray-700">
           <h3 className="font-semibold mb-3">💡 Dicas:</h3>
           <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
             <li>

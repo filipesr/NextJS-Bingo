@@ -151,7 +151,7 @@ export default function CardPage({ params }: PageProps) {
         </div>
 
         {/* Instruções */}
-        <div className="mt-8 bg-blue-50 dark:bg-blue-900 rounded-lg p-4 border-2 border-blue-300 dark:border-blue-700">
+        <div className="mt-8 bg-blue-100 dark:bg-blue-900 rounded-lg p-4 border-2 border-blue-300 dark:border-blue-700">
           <h3 className="font-semibold mb-2">ℹ️ Como jogar:</h3>
           <ul className="space-y-1 text-sm">
             <li>

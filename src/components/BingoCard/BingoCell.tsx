@@ -45,14 +45,14 @@ export function BingoCell({
           "bg-green-500 dark:bg-green-600 border-green-600 dark:border-green-700 text-white animate-pulse",
         // FREE space
         isFree &&
-          "bg-yellow-400 dark:bg-yellow-500 border-yellow-500 dark:border-yellow-600 text-black dark:text-gray-900",
+          "bg-yellow-500 dark:bg-yellow-600 border-yellow-600 dark:border-yellow-700 text-white dark:text-white",
         // Número sorteado mas não marcado
         isDrawn &&
           !isMarked &&
           !isFree &&
           "ring-2 ring-red-500 dark:ring-red-400",
         // Célula vazia (Bingo 90)
-        number === null && !isFree && "bg-gray-200 dark:bg-gray-900 border-gray-300 dark:border-gray-700"
+        number === null && !isFree && "bg-gray-300 dark:bg-gray-900 border-gray-400 dark:border-gray-700"
       )}
     >
       {isFree ? (
