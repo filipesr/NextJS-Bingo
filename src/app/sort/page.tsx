@@ -101,7 +101,7 @@ export default function SortPage() {
 
                 {/* Apelido/chamada do número */}
                 {getNumberCall(sortState.currentNumber) && (
-                  <div className="text-2xl mt-4 italic text-warning-foreground/80">
+                  <div className="text-2xl mt-4 italic ">
                     &quot;{getNumberCall(sortState.currentNumber)}&quot;
                   </div>
                 )}
