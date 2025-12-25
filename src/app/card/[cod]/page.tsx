@@ -7,7 +7,6 @@ import { BingoCard75Component } from "@/components/BingoCard/BingoCard75";
 import { BingoCard90Component } from "@/components/BingoCard/BingoCard90";
 import { StatsPanel } from "@/components/StatsPanel/StatsPanel";
 import { ThemeToggle } from "@/components/ThemeToggle";
-import { loadSortState } from "@/lib/storage/localStorage";
 
 interface PageProps {
   params: Promise<{ cod: string }>;
@@ -24,10 +23,6 @@ export default function CardPage({ params }: PageProps) {
   const { card, markedNumbers, drawnNumbers, toggleNumber, winCheck, stats, isValid } =
     useBingoCard(decodedCod);
   const [showBingo, setShowBingo] = useState(true);
-
-  // Carregar último número sorteado
-  const sortState = loadSortState();
-  const currentNumber = sortState?.currentNumber || null;
 
   // Código inválido
   if (!isValid || !card) {
@@ -142,11 +137,7 @@ export default function CardPage({ params }: PageProps) {
           {/* Estatísticas */}
           <div>
             <h2 className="font-semibold text-lg mb-3">📊 Estatísticas</h2>
-            <StatsPanel
-              stats={stats}
-              currentNumber={currentNumber}
-              drawnNumbers={drawnNumbers}
-            />
+            <StatsPanel stats={stats} drawnNumbers={drawnNumbers} />
           </div>
         </div>
 

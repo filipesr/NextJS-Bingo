@@ -91,7 +91,6 @@ export function useBingoCard(code: string) {
         markedNumbers: 0,
         drawnButNotMarked: 0,
         percentage: 0,
-        remainingToWin: 0,
       };
     }
 
@@ -112,40 +111,11 @@ export function useBingoCard(code: string) {
     // Porcentagem de progresso
     const percentage = totalNumbers > 0 ? (marked / totalNumbers) * 100 : 0;
 
-    // Números faltantes para vitória (simplificado: próximo padrão de linha)
-    let remainingToWin = 0;
-    if (card.mode === "75") {
-      // Verificar linha mais próxima de ser completada
-      for (let row = 0; row < 5; row++) {
-        const rowNumbers = card.grid[row].filter((n) => n !== null);
-        const rowMarked = rowNumbers.filter((n) =>
-          markedNumbers.includes(n!)
-        ).length;
-        const rowRemaining = rowNumbers.length - rowMarked;
-        if (remainingToWin === 0 || rowRemaining < remainingToWin) {
-          remainingToWin = rowRemaining;
-        }
-      }
-    } else {
-      // Bingo 90: verificar primeira linha
-      for (let row = 0; row < 3; row++) {
-        const rowNumbers = card.grid[row].filter((n) => n !== null);
-        const rowMarked = rowNumbers.filter((n) =>
-          markedNumbers.includes(n!)
-        ).length;
-        const rowRemaining = rowNumbers.length - rowMarked;
-        if (remainingToWin === 0 || rowRemaining < remainingToWin) {
-          remainingToWin = rowRemaining;
-        }
-      }
-    }
-
     return {
       totalNumbers,
       markedNumbers: marked,
       drawnButNotMarked,
       percentage: Math.round(percentage),
-      remainingToWin,
     };
   }, [card, markedNumbers, drawnNumbers]);
 

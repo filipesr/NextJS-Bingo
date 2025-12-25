@@ -4,7 +4,6 @@ import type { CardStats } from "@/lib/bingo/types";
 
 interface StatsPanelProps {
   stats: CardStats;
-  currentNumber: number | null;
   drawnNumbers: number[];
 }
 
@@ -12,11 +11,7 @@ interface StatsPanelProps {
  * Componente de painel de estatísticas da cartela
  * Mostra progresso, números sorteados e estatísticas em tempo real
  */
-export function StatsPanel({
-  stats,
-  currentNumber,
-  drawnNumbers,
-}: StatsPanelProps) {
+export function StatsPanel({ stats, drawnNumbers }: StatsPanelProps) {
   return (
     <div className="space-y-4">
       {/* Estatísticas principais */}
@@ -39,16 +34,6 @@ export function StatsPanel({
           </div>
         </div>
 
-        {/* Números faltantes */}
-        {stats.remainingToWin > 0 && (
-          <div className="text-sm">
-            <span className="text-orange-600 dark:text-orange-400 font-semibold">
-              🎯 Faltam {stats.remainingToWin} número
-              {stats.remainingToWin !== 1 && "s"} para o próximo padrão!
-            </span>
-          </div>
-        )}
-
         {/* Avisos */}
         {stats.drawnButNotMarked > 0 && (
           <div className="mt-2 text-sm text-red-600 dark:text-red-400 font-semibold">
@@ -58,18 +43,6 @@ export function StatsPanel({
           </div>
         )}
       </div>
-
-      {/* Último número sorteado */}
-      {currentNumber && (
-        <div className="bg-warning/10 rounded-lg p-4 border-2 border-warning">
-          <h3 className="font-semibold text-sm mb-2 text-muted-foreground">
-            Último Sorteado:
-          </h3>
-          <div className="text-5xl font-bold text-center text-warning-foreground">
-            {currentNumber}
-          </div>
-        </div>
-      )}
 
       {/* Histórico de números sorteados */}
       <div className="bg-card rounded-lg p-4 border-2 border-border">

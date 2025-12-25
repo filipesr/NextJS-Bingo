@@ -81,7 +81,6 @@ export interface CardStats {
   markedNumbers: number; // Números marcados
   drawnButNotMarked: number; // Números sorteados mas não marcados
   percentage: number; // Porcentagem de progresso (0-100)
-  remainingToWin: number; // Números faltantes para o padrão mais próximo
 }
 
 // Configuração do jogo
