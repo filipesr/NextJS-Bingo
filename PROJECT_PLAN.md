@@ -402,6 +402,38 @@ NextJS-Bingo/
 
 **Status da Fase 1**: ✅ **CONCLUÍDA** (2025-12-25)
 
+### Melhorias Adicionais Implementadas
+
+#### Sistema de Design Tokens Semânticos (2025-12-25)
+- [x] Implementado sistema completo de design tokens em HSL
+- [x] 15+ tokens semânticos (primary, secondary, success, warning, destructive, info, accent)
+- [x] Tokens específicos do Bingo (bingo-75-header, bingo-90-header, bingo-free)
+- [x] Todos os componentes atualizados com tokens semânticos
+- [x] WCAG AA/AAA compliance em todos os contrastes
+- [x] Ambos temas (claro/escuro) igualmente polidos
+
+#### Redesign da Home Page (2025-12-25)
+- [x] Removidas explicações técnicas de encoding/decoding
+- [x] Adicionadas regras completas para ambas modalidades
+- [x] Cards de acesso rápido para /sort e /card
+- [x] Guia passo-a-passo "Como Jogar"
+- [x] Layout limpo e focado no usuário
+
+#### Otimizações para Modo Offline (2025-12-25)
+- [x] Removido campo "Último Sorteado" (não faz sentido offline)
+- [x] Removida mensagem "Faltam X números para o próximo padrão" (enganosa)
+- [x] StatsPanel otimizado com apenas informações relevantes
+- [x] Mantido aviso importante de números não marcados
+- [x] Código preparado para futura feature online
+
+#### UX Improvements - Sort Page (2025-12-25)
+- [x] Botão toggle para alternar ordenação dos números sorteados
+- [x] Opção "Ordem de chamada" (cronológica - padrão)
+- [x] Opção "Ordem crescente" (numérica)
+- [x] UI responsiva com ícones + texto (desktop) e apenas ícones (mobile)
+- [x] Performance otimizada com useMemo
+- [x] Destaque do número atual mantido em ambos modos
+
 ---
 
 ## 📝 Notas de Implementação
