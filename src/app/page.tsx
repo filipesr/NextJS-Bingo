@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Collapsible } from "@/components/ui/Collapsible";
 
 export default function Home() {
   return (
@@ -145,59 +146,61 @@ export default function Home() {
         <section className="mb-12">
           <h2 className="text-2xl font-semibold mb-4">🎮 Como Jogar</h2>
 
-          <div className="bg-card border-2 border-border rounded-lg p-6 space-y-4">
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
-                1
+          <Collapsible title="Instruções passo a passo" defaultOpen={true}>
+            <div className="space-y-4">
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
+                  1
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Inicie o Sorteio</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Acesse a <Link href="/sort" className="text-primary underline hover:no-underline">página de sorteio</Link> e
+                    escolha a modalidade (75 ou 90 bolas). Clique em &quot;Sortear Próximo&quot; para cada número.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold mb-1">Inicie o Sorteio</h3>
-                <p className="text-sm text-muted-foreground">
-                  Acesse a <Link href="/sort" className="text-primary underline hover:no-underline">página de sorteio</Link> e
-                  escolha a modalidade (75 ou 90 bolas). Clique em &quot;Sortear Próximo&quot; para cada número.
-                </p>
-              </div>
-            </div>
 
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
-                2
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
+                  2
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Gere ou Use uma Cartela</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Acesse a <Link href="/card" className="text-primary underline hover:no-underline">página de geração</Link> para
+                    criar uma cartela aleatória. Cada cartela terá um código único na URL que pode ser compartilhado.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold mb-1">Gere ou Use uma Cartela</h3>
-                <p className="text-sm text-muted-foreground">
-                  Acesse a <Link href="/card" className="text-primary underline hover:no-underline">página de geração</Link> para
-                  criar uma cartela aleatória. Cada cartela terá um código único na URL que pode ser compartilhado.
-                </p>
-              </div>
-            </div>
 
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
-                3
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
+                  3
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">Marque os Números</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Quando um número for sorteado, clique nele em sua cartela para marcá-lo.
+                    Números sorteados mas não marcados aparecem com borda vermelha.
+                  </p>
+                </div>
               </div>
-              <div>
-                <h3 className="font-semibold mb-1">Marque os Números</h3>
-                <p className="text-sm text-muted-foreground">
-                  Quando um número for sorteado, clique nele em sua cartela para marcá-lo.
-                  Números sorteados mas não marcados aparecem com borda vermelha.
-                </p>
-              </div>
-            </div>
 
-            <div className="flex items-start gap-3">
-              <div className="flex-shrink-0 w-8 h-8 bg-success text-success-foreground rounded-full flex items-center justify-center font-bold">
-                ✓
-              </div>
-              <div>
-                <h3 className="font-semibold mb-1">BINGO!</h3>
-                <p className="text-sm text-muted-foreground">
-                  Complete o padrão vencedor e o botão &quot;BINGO!&quot; aparecerá automaticamente.
-                  Suas marcações são salvas automaticamente no navegador.
-                </p>
+              <div className="flex items-start gap-3">
+                <div className="flex-shrink-0 w-8 h-8 bg-success text-success-foreground rounded-full flex items-center justify-center font-bold">
+                  ✓
+                </div>
+                <div>
+                  <h3 className="font-semibold mb-1">BINGO!</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Complete o padrão vencedor e o botão &quot;BINGO!&quot; aparecerá automaticamente.
+                    Suas marcações são salvas automaticamente no navegador.
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
+          </Collapsible>
         </section>
 
         {/* Footer */}

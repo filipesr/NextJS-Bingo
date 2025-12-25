@@ -7,6 +7,7 @@ import { BingoCard75Component } from "@/components/BingoCard/BingoCard75";
 import { BingoCard90Component } from "@/components/BingoCard/BingoCard90";
 import { StatsPanel } from "@/components/StatsPanel/StatsPanel";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Collapsible } from "@/components/ui/Collapsible";
 
 interface PageProps {
   params: Promise<{ cod: string }>;
@@ -142,28 +143,29 @@ export default function CardPage({ params }: PageProps) {
         </div>
 
         {/* Instruções */}
-        <div className="mt-8 bg-info/10 rounded-lg p-4 border-2 border-info">
-          <h3 className="font-semibold mb-2">ℹ️ Como jogar:</h3>
-          <ul className="space-y-1 text-sm">
-            <li>
-              1. Aguarde os números serem sorteados na{" "}
-              <Link href="/sort" className="text-primary underline hover:no-underline">
-                página de sorteio
-              </Link>
-            </li>
-            <li>
-              2. Clique nos números da sua cartela quando forem sorteados para marcá-los
-            </li>
-            <li>
-              3. Os números já sorteados aparecem com borda vermelha se ainda não foram marcados
-            </li>
-            <li>
-              4. Quando completar um padrão, o botão &quot;BINGO!&quot; aparecerá automaticamente
-            </li>
-            <li>
-              5. Suas marcações são salvas automaticamente
-            </li>
-          </ul>
+        <div className="mt-8">
+          <Collapsible title="Como jogar" icon="ℹ️" defaultOpen={false}>
+            <ul className="space-y-1 text-sm">
+              <li>
+                1. Aguarde os números serem sorteados na{" "}
+                <Link href="/sort" className="text-primary underline hover:no-underline">
+                  página de sorteio
+                </Link>
+              </li>
+              <li>
+                2. Clique nos números da sua cartela quando forem sorteados para marcá-los
+              </li>
+              <li>
+                3. Os números já sorteados aparecem com borda vermelha se ainda não foram marcados
+              </li>
+              <li>
+                4. Quando completar um padrão, o botão &quot;BINGO!&quot; aparecerá automaticamente
+              </li>
+              <li>
+                5. Suas marcações são salvas automaticamente
+              </li>
+            </ul>
+          </Collapsible>
         </div>
       </div>
     </main>

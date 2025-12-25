@@ -6,6 +6,7 @@ import Link from "next/link";
 import type { BingoMode } from "@/lib/bingo/types";
 import { generateRandomCard75, generateRandomCard90 } from "@/lib/bingo/generator-cards";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Collapsible } from "@/components/ui/Collapsible";
 
 /**
  * Página de geração de cartelas aleatórias
@@ -52,22 +53,23 @@ export default function CardGeneratorPage() {
         </header>
 
         {/* Explicação */}
-        <div className="mb-8 bg-info/10 rounded-lg p-6 border-2 border-info">
-          <h2 className="font-semibold text-lg mb-3">ℹ️ Como funciona:</h2>
-          <ul className="space-y-2 text-sm">
-            <li>
-              1. Escolha entre Bingo 75 bolas (Americano) ou 90 bolas (Britânico)
-            </li>
-            <li>
-              2. Uma cartela com números aleatórios será gerada automaticamente
-            </li>
-            <li>
-              3. Você será redirecionado para sua cartela com um código único
-            </li>
-            <li>
-              4. Compartilhe o código da URL com outros jogadores se necessário
-            </li>
-          </ul>
+        <div className="mb-8">
+          <Collapsible title="Como funciona" icon="ℹ️" defaultOpen={false}>
+            <ul className="space-y-2 text-sm">
+              <li>
+                1. Escolha entre Bingo 75 bolas (Americano) ou 90 bolas (Britânico)
+              </li>
+              <li>
+                2. Uma cartela com números aleatórios será gerada automaticamente
+              </li>
+              <li>
+                3. Você será redirecionado para sua cartela com um código único
+              </li>
+              <li>
+                4. Compartilhe o código da URL com outros jogadores se necessário
+              </li>
+            </ul>
+          </Collapsible>
         </div>
 
         {/* Seletores de Modalidade */}
@@ -124,26 +126,27 @@ export default function CardGeneratorPage() {
         </div>
 
         {/* Informações Adicionais */}
-        <div className="mt-8 bg-muted rounded-lg p-6 border-2 border-border">
-          <h3 className="font-semibold mb-3">💡 Dicas:</h3>
-          <ul className="space-y-2 text-sm">
-            <li>
-              • A cartela gerada terá um código único na URL que você pode compartilhar
-            </li>
-            <li>
-              • Os números são distribuídos aleatoriamente de forma válida
-            </li>
-            <li>
-              • Você pode gerar quantas cartelas quiser
-            </li>
-            <li>
-              • Para jogar, acesse a{" "}
-              <Link href="/sort" className="text-primary underline hover:no-underline">
-                página de sorteio
-              </Link>
-              {" "}em outra aba ou dispositivo
-            </li>
-          </ul>
+        <div className="mt-8">
+          <Collapsible title="Dicas" icon="💡" defaultOpen={false}>
+            <ul className="space-y-2 text-sm">
+              <li>
+                • A cartela gerada terá um código único na URL que você pode compartilhar
+              </li>
+              <li>
+                • Os números são distribuídos aleatoriamente de forma válida
+              </li>
+              <li>
+                • Você pode gerar quantas cartelas quiser
+              </li>
+              <li>
+                • Para jogar, acesse a{" "}
+                <Link href="/sort" className="text-primary underline hover:no-underline">
+                  página de sorteio
+                </Link>
+                {" "}em outra aba ou dispositivo
+              </li>
+            </ul>
+          </Collapsible>
         </div>
       </div>
     </main>

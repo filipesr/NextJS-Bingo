@@ -5,6 +5,9 @@ import Link from "next/link";
 import type { BingoMode } from "@/lib/bingo/types";
 import { useBingoSort } from "@/hooks/useBingoSort";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Collapsible } from "@/components/ui/Collapsible";
+import { getNumberWithLetter } from "@/lib/bingo/utils";
+import { getNumberCall } from "@/lib/bingo/calls";
 
 /**
  * Página de sorteio de números do Bingo
@@ -89,9 +92,20 @@ export default function SortPage() {
           </h2>
           <div className="text-center">
             {sortState.currentNumber ? (
-              <div className="text-8xl font-bold drop-shadow-lg animate-pulse">
-                {sortState.currentNumber}
-              </div>
+              <>
+                <div className="text-8xl font-bold drop-shadow-lg animate-pulse">
+                  {mode === "75"
+                    ? getNumberWithLetter(sortState.currentNumber)
+                    : sortState.currentNumber}
+                </div>
+
+                {/* Apelido/chamada do número */}
+                {getNumberCall(sortState.currentNumber) && (
+                  <div className="text-2xl mt-4 italic text-warning-foreground/80">
+                    &quot;{getNumberCall(sortState.currentNumber)}&quot;
+                  </div>
+                )}
+              </>
             ) : (
               <div className="text-6xl font-bold text-muted-foreground">
                 --
@@ -174,13 +188,13 @@ export default function SortPage() {
               {displayedNumbers.map((num, index) => (
                 <div
                   key={index}
-                  className={`aspect-square flex items-center justify-center font-bold text-sm sm:text-base rounded border-2 ${
+                  className={`aspect-square flex items-center justify-center font-bold text-xs sm:text-sm rounded border-2 ${
                     num === sortState.currentNumber
                       ? "bg-warning border-warning text-warning-foreground scale-110"
                       : "bg-muted text-foreground border-border"
                   } transition-all`}
                 >
-                  {num}
+                  {mode === "75" ? getNumberWithLetter(num) : num}
                 </div>
               ))}
             </div>
@@ -188,25 +202,26 @@ export default function SortPage() {
         </div>
 
         {/* Instruções */}
-        <div className="mt-8 bg-info/10 rounded-lg p-4 border-2 border-info">
-          <h3 className="font-semibold mb-2">ℹ️ Como usar:</h3>
-          <ul className="space-y-1 text-sm">
-            <li>
-              1. Escolha a modalidade (75 ou 90 bolas)
-            </li>
-            <li>
-              2. Clique em &quot;Sortear Próximo&quot; para sortear cada número
-            </li>
-            <li>
-              3. Os números sorteados são salvos automaticamente
-            </li>
-            <li>
-              4. Jogadores devem acessar suas cartelas usando códigos únicos (ex: /card/[código])
-            </li>
-            <li>
-              5. Use &quot;Resetar&quot; para começar um novo jogo
-            </li>
-          </ul>
+        <div className="mt-8">
+          <Collapsible title="Como usar" icon="ℹ️" defaultOpen={false}>
+            <ul className="space-y-1 text-sm">
+              <li>
+                1. Escolha a modalidade (75 ou 90 bolas)
+              </li>
+              <li>
+                2. Clique em &quot;Sortear Próximo&quot; para sortear cada número
+              </li>
+              <li>
+                3. Os números sorteados são salvos automaticamente
+              </li>
+              <li>
+                4. Jogadores devem acessar suas cartelas usando códigos únicos (ex: /card/[código])
+              </li>
+              <li>
+                5. Use &quot;Resetar&quot; para começar um novo jogo
+              </li>
+            </ul>
+          </Collapsible>
         </div>
       </div>
     </main>
