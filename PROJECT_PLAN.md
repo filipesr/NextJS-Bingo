@@ -364,41 +364,43 @@ NextJS-Bingo/
 ## ✅ Critérios de Aceitação - Fase 1
 
 ### Página de Sorteio
-- [ ] Selecionar modalidade 75 ou 90 bolas
-- [ ] Sortear números aleatórios sem repetição
-- [ ] Exibir número atual em destaque
-- [ ] Mostrar histórico completo
-- [ ] Persistir no localStorage
-- [ ] Reset funcional
-- [ ] Responsivo mobile/desktop
-- [ ] Tema claro/escuro funcional
+- [x] Selecionar modalidade 75 ou 90 bolas
+- [x] Sortear números aleatórios sem repetição
+- [x] Exibir número atual em destaque
+- [x] Mostrar histórico completo
+- [x] Persistir no localStorage
+- [x] Reset funcional
+- [x] Responsivo mobile/desktop
+- [x] Tema claro/escuro funcional
 
 ### Página de Cartela
-- [ ] Decodificar código da URL corretamente
-- [ ] Renderizar cartela 75 bolas (5×5)
-- [ ] Renderizar cartela 90 bolas (9×3)
-- [ ] Marcar/desmarcar números ao clicar
-- [ ] Ler números sorteados do localStorage
-- [ ] Destacar números já sorteados
-- [ ] Detectar vitória (padrão básico)
-- [ ] Botão BINGO! aparece ao vencer
-- [ ] Responsivo mobile/desktop
-- [ ] Tema claro/escuro funcional
+- [x] Decodificar código da URL corretamente
+- [x] Renderizar cartela 75 bolas (5×5)
+- [x] Renderizar cartela 90 bolas (9×3)
+- [x] Marcar/desmarcar números ao clicar
+- [x] Ler números sorteados do localStorage
+- [x] Destacar números já sorteados
+- [x] Detectar vitória (padrão básico)
+- [x] Botão BINGO! aparece ao vencer
+- [x] Responsivo mobile/desktop
+- [x] Tema claro/escuro funcional
 
 ### Sistema de Códigos
-- [ ] Encoder 90 bolas funcionando
-- [ ] Decoder 90 bolas funcionando
-- [ ] Encoder 75 bolas (hex) funcionando
-- [ ] Decoder 75 bolas (hex) funcionando
-- [ ] Validação de códigos inválidos
-- [ ] URLs amigáveis e compartilháveis
+- [x] Encoder 90 bolas funcionando
+- [x] Decoder 90 bolas funcionando
+- [x] Encoder 75 bolas (hex) funcionando
+- [x] Decoder 75 bolas (hex) funcionando
+- [x] Validação de códigos inválidos
+- [x] URLs amigáveis e compartilháveis
 
 ### Qualidade
-- [ ] TypeScript sem erros
-- [ ] Sem warnings no console
-- [ ] Performance adequada
-- [ ] Acessibilidade básica (ARIA labels)
-- [ ] Compatibilidade cross-browser
+- [x] TypeScript sem erros
+- [x] Sem warnings no console
+- [x] Performance adequada
+- [x] Acessibilidade básica (ARIA labels)
+- [x] Compatibilidade cross-browser
+
+**Status da Fase 1**: ✅ **CONCLUÍDA** (2025-12-25)
 
 ---
 
