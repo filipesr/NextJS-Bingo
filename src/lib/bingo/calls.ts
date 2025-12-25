@@ -73,7 +73,6 @@ const BINGO_CALLS: Record<number, string> = {
   30: "Trinta réis",
   32: "Dentes completos",
   34: "Ronaldo Fenômeno",
-  35: "Meio caminho",
   36: "Três dúzias",
   37: "Febre", // temperatura corporal
   39: "Quase quarenta",
