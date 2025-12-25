@@ -35,7 +35,7 @@ export default function SortPage() {
           <div>
             <Link
               href="/"
-              className="text-sm text-blue-600 dark:text-blue-400 hover:underline mb-2 block"
+              className="text-sm text-primary hover:underline mb-2 block"
             >
               ← Voltar para Home
             </Link>
@@ -45,25 +45,25 @@ export default function SortPage() {
         </header>
 
         {/* Seletor de modalidade */}
-        <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg p-4 border-2 border-gray-300 dark:border-gray-700">
+        <div className="mb-6 bg-card rounded-lg p-4 border-2 border-border">
           <h2 className="font-semibold mb-3">Modalidade:</h2>
           <div className="flex gap-4">
             <button
               onClick={() => handleModeChange("75")}
-              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition ${
+              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 mode === "75"
-                  ? "bg-red-600 text-white"
-                  : "bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-600"
+                  ? "bg-[hsl(var(--bingo-75-header))] text-white"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
               }`}
             >
               🇺🇸 Bingo 75 Bolas
             </button>
             <button
               onClick={() => handleModeChange("90")}
-              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition ${
+              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 mode === "90"
-                  ? "bg-blue-600 text-white"
-                  : "bg-gray-300 dark:bg-gray-700 text-gray-700 dark:text-gray-200 hover:bg-gray-400 dark:hover:bg-gray-600"
+                  ? "bg-[hsl(var(--bingo-90-header))] text-white"
+                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
               }`}
             >
               🇬🇧 Bingo 90 Bolas
@@ -72,19 +72,19 @@ export default function SortPage() {
         </div>
 
         {/* Display do número atual */}
-        <div className="mb-6 bg-gradient-to-br from-orange-500 to-red-600 dark:from-yellow-500 dark:to-orange-600 rounded-lg p-8 border-4 border-orange-700 dark:border-yellow-700 shadow-xl">
-          <h2 className="text-center text-xl font-semibold text-white mb-4">
+        <div className="mb-6 bg-warning/20 rounded-lg p-8 border-4 border-warning shadow-xl">
+          <h2 className="text-center text-xl font-semibold mb-4">
             {sortState.currentNumber
               ? "Número Sorteado:"
               : "Aguardando Sorteio..."}
           </h2>
           <div className="text-center">
             {sortState.currentNumber ? (
-              <div className="text-8xl font-bold text-white drop-shadow-lg animate-pulse">
+              <div className="text-8xl font-bold text-warning-foreground drop-shadow-lg animate-pulse">
                 {sortState.currentNumber}
               </div>
             ) : (
-              <div className="text-6xl font-bold text-white/70">
+              <div className="text-6xl font-bold text-muted-foreground">
                 --
               </div>
             )}
@@ -96,29 +96,29 @@ export default function SortPage() {
           <button
             onClick={draw}
             disabled={!hasMoreNumbers}
-            className="flex-1 bg-green-600 hover:bg-green-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold py-4 px-6 rounded-lg text-xl transition"
+            className="flex-1 bg-success hover:bg-success/90 disabled:bg-muted disabled:cursor-not-allowed text-success-foreground font-bold py-4 px-6 rounded-lg text-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {hasMoreNumbers ? "🎲 Sortear Próximo" : "Sem Mais Números"}
           </button>
           <button
             onClick={reset}
-            className="bg-red-600 hover:bg-red-700 text-white font-bold py-4 px-6 rounded-lg transition"
+            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-bold py-4 px-6 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             🔄 Resetar
           </button>
         </div>
 
         {/* Progresso */}
-        <div className="mb-6 bg-white dark:bg-gray-800 rounded-lg p-4 border-2 border-gray-300 dark:border-gray-700">
+        <div className="mb-6 bg-card rounded-lg p-4 border-2 border-border">
           <div className="flex justify-between text-sm mb-2">
             <span>Progresso:</span>
             <span className="font-semibold">
               {drawnCount}/{totalNumbers} números sorteados
             </span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-4 overflow-hidden">
+          <div className="w-full bg-muted rounded-full h-4 overflow-hidden">
             <div
-              className="bg-blue-500 dark:bg-blue-600 h-full transition-all duration-300"
+              className="bg-primary h-full transition-all duration-300"
               style={{
                 width: `${(drawnCount / totalNumbers) * 100}%`,
               }}
@@ -127,12 +127,12 @@ export default function SortPage() {
         </div>
 
         {/* Histórico de números sorteados */}
-        <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border-2 border-gray-300 dark:border-gray-700">
+        <div className="bg-card rounded-lg p-6 border-2 border-border">
           <h2 className="font-semibold text-lg mb-4">
             📝 Números Sorteados ({sortState.drawnNumbers.length})
           </h2>
           {sortState.drawnNumbers.length === 0 ? (
-            <p className="text-center text-gray-500 dark:text-gray-400 py-8">
+            <p className="text-center text-muted-foreground py-8">
               Nenhum número sorteado ainda. Clique em &quot;Sortear Próximo&quot; para começar!
             </p>
           ) : (
@@ -142,8 +142,8 @@ export default function SortPage() {
                   key={index}
                   className={`aspect-square flex items-center justify-center font-bold text-sm sm:text-base rounded border-2 ${
                     num === sortState.currentNumber
-                      ? "bg-yellow-400 dark:bg-yellow-500 border-yellow-600 dark:border-yellow-700 text-gray-900 scale-110"
-                      : "bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 border-gray-400 dark:border-gray-600"
+                      ? "bg-warning border-warning text-warning-foreground scale-110"
+                      : "bg-muted text-foreground border-border"
                   } transition-all`}
                 >
                   {num}
@@ -154,7 +154,7 @@ export default function SortPage() {
         </div>
 
         {/* Instruções */}
-        <div className="mt-8 bg-blue-100 dark:bg-blue-900 rounded-lg p-4 border-2 border-blue-300 dark:border-blue-700">
+        <div className="mt-8 bg-info/10 rounded-lg p-4 border-2 border-info">
           <h3 className="font-semibold mb-2">ℹ️ Como usar:</h3>
           <ul className="space-y-1 text-sm">
             <li>

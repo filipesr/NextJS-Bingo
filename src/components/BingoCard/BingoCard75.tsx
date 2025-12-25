@@ -33,7 +33,7 @@ export function BingoCard75Component({
         {["B", "I", "N", "G", "O"].map((letter) => (
           <div
             key={letter}
-            className="aspect-square flex items-center justify-center font-bold text-xl bg-red-600 dark:bg-red-700 text-white rounded"
+            className="aspect-square flex items-center justify-center font-bold text-xl bg-[hsl(var(--bingo-75-header))] text-white rounded shadow-sm"
           >
             {letter}
           </div>
@@ -65,21 +65,21 @@ export function BingoCard75Component({
       </div>
 
       {/* Legenda */}
-      <div className="mt-4 flex flex-wrap gap-2 text-xs">
+      <div className="mt-4 flex flex-wrap gap-2 text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600"></div>
+          <div className="w-4 h-4 bg-card border-2 border-border"></div>
           <span>Não marcado</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 bg-blue-500 border-2 border-blue-600"></div>
+          <div className="w-4 h-4 bg-primary border-2 border-primary"></div>
           <span>Marcado</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 bg-white dark:bg-gray-800 border-2 border-gray-300 dark:border-gray-600 ring-2 ring-red-500"></div>
+          <div className="w-4 h-4 bg-card border-2 border-border ring-2 ring-destructive"></div>
           <span>Sorteado (não marcado)</span>
         </div>
         <div className="flex items-center gap-1">
-          <div className="w-4 h-4 bg-yellow-400 border-2 border-yellow-500"></div>
+          <div className="w-4 h-4 bg-warning border-2 border-warning"></div>
           <span>FREE</span>
         </div>
       </div>

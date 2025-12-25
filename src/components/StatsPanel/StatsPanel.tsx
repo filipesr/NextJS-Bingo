@@ -61,18 +61,18 @@ export function StatsPanel({
 
       {/* Último número sorteado */}
       {currentNumber && (
-        <div className="bg-yellow-50 dark:bg-yellow-900 rounded-lg p-4 border-2 border-yellow-400 dark:border-yellow-600">
-          <h3 className="font-semibold text-sm mb-2 text-gray-700 dark:text-gray-300">
+        <div className="bg-warning/10 rounded-lg p-4 border-2 border-warning">
+          <h3 className="font-semibold text-sm mb-2 text-muted-foreground">
             Último Sorteado:
           </h3>
-          <div className="text-5xl font-bold text-center text-yellow-800 dark:text-yellow-300">
+          <div className="text-5xl font-bold text-center text-warning-foreground">
             {currentNumber}
           </div>
         </div>
       )}
 
       {/* Histórico de números sorteados */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg p-4 border-2 border-gray-300 dark:border-gray-700">
+      <div className="bg-card rounded-lg p-4 border-2 border-border">
         <h3 className="font-semibold text-sm mb-3">
           🔢 Números Sorteados ({drawnNumbers.length})
         </h3>
@@ -86,7 +86,7 @@ export function StatsPanel({
               {drawnNumbers.map((num, index) => (
                 <div
                   key={index}
-                  className="aspect-square flex items-center justify-center text-xs font-semibold bg-gray-300 dark:bg-gray-700 text-gray-900 dark:text-gray-100 rounded border border-gray-400 dark:border-gray-600"
+                  className="aspect-square flex items-center justify-center text-xs font-semibold bg-muted text-foreground rounded border border-border"
                 >
                   {num}
                 </div>

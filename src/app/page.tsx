@@ -21,135 +21,187 @@ export default function Home() {
           </p>
         </section>
 
-        {/* Modalidades */}
+        {/* Atalhos Rápidos */}
         <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4">Modalidades</h2>
-
-          <div className="grid md:grid-cols-2 gap-6">
-            {/* Bingo 75 */}
-            <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">🇺🇸 Bingo 75 Bolas</h3>
-              <ul className="space-y-2 text-sm">
-                <li>• Cartela: 5×5 (24 números + FREE)</li>
-                <li>• Colunas: B-I-N-G-O</li>
-                <li>• Números: 1-75</li>
-                <li>• Padrões: linha, diagonal, X, etc</li>
-              </ul>
-            </div>
-
-            {/* Bingo 90 */}
-            <div className="border border-gray-300 dark:border-gray-700 rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-3">🇬🇧 Bingo 90 Bolas</h3>
-              <ul className="space-y-2 text-sm">
-                <li>• Cartela: 9×3 (15 números)</li>
-                <li>• 9 colunas por dezenas</li>
-                <li>• Números: 1-90</li>
-                <li>• Padrões: 1 linha, 2 linhas, full house</li>
-              </ul>
-            </div>
+          <h2 className="text-2xl font-semibold mb-4">Acesso Rápido</h2>
+          <div className="grid md:grid-cols-2 gap-4">
+            <Link
+              href="/sort"
+              className="flex items-center gap-4 bg-card hover:bg-accent/10 border-2 border-border hover:border-accent p-6 rounded-lg transition-colors group"
+            >
+              <div className="text-5xl">🎰</div>
+              <div>
+                <h3 className="font-bold text-xl mb-1 group-hover:text-accent transition-colors">Sorteio</h3>
+                <p className="text-sm text-muted-foreground">
+                  Sortear números para o jogo
+                </p>
+              </div>
+            </Link>
+            <Link
+              href="/card"
+              className="flex items-center gap-4 bg-card hover:bg-accent/10 border-2 border-border hover:border-accent p-6 rounded-lg transition-colors group"
+            >
+              <div className="text-5xl">🎲</div>
+              <div>
+                <h3 className="font-bold text-xl mb-1 group-hover:text-accent transition-colors">Cartela</h3>
+                <p className="text-sm text-muted-foreground">
+                  Gerar cartela aleatória
+                </p>
+              </div>
+            </Link>
           </div>
         </section>
 
-        {/* Como Usar */}
+        {/* Regras do Jogo */}
         <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4">Como Usar</h2>
+          <h2 className="text-2xl font-semibold mb-6">📜 Regras do Jogo</h2>
 
-          <div className="space-y-6">
-            {/* Passo 1: Sorteio */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2">1️⃣ Sortear Números</h3>
-              <p className="mb-3">
-                Acesse a página de <strong>sorteio</strong> para começar a sortear números.
-                Escolha a modalidade (75 ou 90 bolas) e clique em &quot;Sortear&quot; para cada número.
-              </p>
-              <Link
-                href="/sort"
-                className="inline-block bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition"
-              >
-                🎰 Ir para Sorteio
-              </Link>
-            </div>
-
-            {/* Passo 2: Cartelas */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2">2️⃣ Gerar ou Usar Cartelas</h3>
-              <p className="mb-3">
-                Você pode <strong>gerar cartelas aleatórias</strong> ou usar códigos únicos existentes.
-                A cartela sincroniza automaticamente com os números sorteados.
-              </p>
-              <div className="space-y-3">
-                <Link
-                  href="/card"
-                  className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-lg transition"
-                >
-                  🎲 Gerar Cartela Aleatória
-                </Link>
-                <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                  <p className="text-sm mb-2">Ou use um código existente:</p>
-                  <p className="font-mono text-sm mb-1">
-                    <strong>Formato 90 bolas:</strong> /card/123+45+6+78+0+12+345+67+89
+          <div className="space-y-8">
+            {/* Bingo 75 Bolas */}
+            <div className="bg-card border-2 border-border rounded-lg p-6">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="text-4xl">🇺🇸</div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Bingo 75 Bolas (Americano)</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Modalidade clássica americana com cartelas B-I-N-G-O
                   </p>
-                  <p className="font-mono text-sm">
-                    <strong>Formato 75 bolas:</strong> /card/1359B248AC78DE135AD39BEF
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold mb-2">🎯 Cartela</h4>
+                  <ul className="space-y-1 text-sm ml-4">
+                    <li>• Grade 5×5 com 25 espaços</li>
+                    <li>• 24 números aleatórios + 1 espaço FREE no centro</li>
+                    <li>• Colunas organizadas por B-I-N-G-O</li>
+                    <li>• B (1-15), I (16-30), N (31-45), G (46-60), O (61-75)</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-2">🏆 Como Ganhar</h4>
+                  <ul className="space-y-1 text-sm ml-4">
+                    <li>• Complete qualquer linha horizontal</li>
+                    <li>• Complete qualquer linha vertical</li>
+                    <li>• Complete qualquer diagonal</li>
+                    <li>• Complete padrões especiais (X, 4 cantos, etc.)</li>
+                    <li>• <strong>Blackout:</strong> preencha toda a cartela (25 espaços)</li>
+                  </ul>
+                </div>
+
+                <div className="bg-info/10 border-2 border-info rounded p-3">
+                  <p className="text-sm">
+                    <strong>💡 Dica:</strong> O espaço FREE no centro já conta como marcado!
                   </p>
                 </div>
               </div>
             </div>
 
-            {/* Passo 3: Jogar */}
-            <div>
-              <h3 className="text-lg font-semibold mb-2">3️⃣ Jogar</h3>
-              <p>
-                Marque os números sorteados manualmente em sua cartela. O sistema detecta
-                automaticamente quando você completa um padrão e exibe o botão <strong>BINGO!</strong>
-              </p>
+            {/* Bingo 90 Bolas */}
+            <div className="bg-card border-2 border-border rounded-lg p-6">
+              <div className="flex items-start gap-4 mb-4">
+                <div className="text-4xl">🇬🇧</div>
+                <div>
+                  <h3 className="text-xl font-bold mb-2">Bingo 90 Bolas (Britânico)</h3>
+                  <p className="text-sm text-muted-foreground">
+                    Modalidade tradicional britânica com cartelas compactas
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                <div>
+                  <h4 className="font-semibold mb-2">🎯 Cartela</h4>
+                  <ul className="space-y-1 text-sm ml-4">
+                    <li>• Grade 9×3 (9 colunas, 3 linhas)</li>
+                    <li>• 15 números distribuídos pela grade</li>
+                    <li>• 5 números por linha, 4 espaços vazios</li>
+                    <li>• Colunas organizadas por dezenas (1-9, 10-19, ..., 80-90)</li>
+                  </ul>
+                </div>
+
+                <div>
+                  <h4 className="font-semibold mb-2">🏆 Como Ganhar</h4>
+                  <ul className="space-y-1 text-sm ml-4">
+                    <li>• <strong>1 Linha:</strong> complete qualquer linha horizontal (5 números)</li>
+                    <li>• <strong>2 Linhas:</strong> complete duas linhas horizontais (10 números)</li>
+                    <li>• <strong>Full House:</strong> complete as 3 linhas (15 números) - VITÓRIA!</li>
+                  </ul>
+                </div>
+
+                <div className="bg-warning/10 border-2 border-warning rounded p-3">
+                  <p className="text-sm">
+                    <strong>⚠️ Importante:</strong> Apenas o Full House (3 linhas completas) conta como vitória oficial!
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </section>
 
-        {/* Sistema de Códigos */}
+        {/* Como Jogar */}
         <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4">Sistema de Códigos</h2>
+          <h2 className="text-2xl font-semibold mb-4">🎮 Como Jogar</h2>
 
-          <div className="space-y-4">
-            <div>
-              <h3 className="font-semibold mb-2">Bingo 90 Bolas (Britânico)</h3>
-              <p className="text-sm mb-2">
-                9 grupos decimais separados por &quot;+&quot;. Cada grupo representa uma dezena.
-              </p>
-              <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-xs">
-                Exemplo: 123+45+6+78+0+12+345+67+89
-                <br />
-                • Grupo 1: &quot;123&quot; → 1, 2, 3
-                <br />
-                • Grupo 2: &quot;45&quot; → 14, 15
-                <br />
-                • Grupo 5: &quot;0&quot; → 50
-                <br />• Total: 15 números
+          <div className="bg-card border-2 border-border rounded-lg p-6 space-y-4">
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
+                1
+              </div>
+              <div>
+                <h3 className="font-semibold mb-1">Inicie o Sorteio</h3>
+                <p className="text-sm text-muted-foreground">
+                  Acesse a <Link href="/sort" className="text-primary underline hover:no-underline">página de sorteio</Link> e
+                  escolha a modalidade (75 ou 90 bolas). Clique em &quot;Sortear Próximo&quot; para cada número.
+                </p>
               </div>
             </div>
 
-            <div>
-              <h3 className="font-semibold mb-2">Bingo 75 Bolas (Americano)</h3>
-              <p className="text-sm mb-2">
-                24 caracteres hexadecimais contínuos (1-F). Representa as 5 colunas B-I-N-G-O.
-              </p>
-              <div className="bg-gray-100 dark:bg-gray-800 p-3 rounded font-mono text-xs">
-                Exemplo: 1359B248AC78DE135AD39BEF
-                <br />
-                • B [0-4]: &quot;1359B&quot; → 1, 3, 5, 9, 11
-                <br />
-                • I [5-9]: &quot;248AC&quot; → 17, 19, 23, 25, 27
-                <br />
-                • N [10-13]: &quot;78DE&quot; → 37, 38, 43, 44 + FREE
-                <br />• Total: 24 números + FREE
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
+                2
+              </div>
+              <div>
+                <h3 className="font-semibold mb-1">Gere ou Use uma Cartela</h3>
+                <p className="text-sm text-muted-foreground">
+                  Acesse a <Link href="/card" className="text-primary underline hover:no-underline">página de geração</Link> para
+                  criar uma cartela aleatória. Cada cartela terá um código único na URL que pode ser compartilhado.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-primary text-primary-foreground rounded-full flex items-center justify-center font-bold">
+                3
+              </div>
+              <div>
+                <h3 className="font-semibold mb-1">Marque os Números</h3>
+                <p className="text-sm text-muted-foreground">
+                  Quando um número for sorteado, clique nele em sua cartela para marcá-lo.
+                  Números sorteados mas não marcados aparecem com borda vermelha.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start gap-3">
+              <div className="flex-shrink-0 w-8 h-8 bg-success text-success-foreground rounded-full flex items-center justify-center font-bold">
+                ✓
+              </div>
+              <div>
+                <h3 className="font-semibold mb-1">BINGO!</h3>
+                <p className="text-sm text-muted-foreground">
+                  Complete o padrão vencedor e o botão &quot;BINGO!&quot; aparecerá automaticamente.
+                  Suas marcações são salvas automaticamente no navegador.
+                </p>
               </div>
             </div>
           </div>
         </section>
 
         {/* Footer */}
-        <footer className="text-center text-sm text-gray-500 dark:text-gray-400 pt-8 border-t border-gray-300 dark:border-gray-700">
+        <footer className="text-center text-sm text-muted-foreground pt-8 border-t border-border">
           <p>Desenvolvido com Next.js 15 e Tailwind CSS</p>
         </footer>
       </div>

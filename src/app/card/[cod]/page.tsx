@@ -34,8 +34,8 @@ export default function CardPage({ params }: PageProps) {
     return (
       <main className="min-h-screen bg-background text-foreground flex items-center justify-center">
         <div className="container mx-auto px-4 py-8 max-w-2xl">
-          <div className="bg-red-50 dark:bg-red-900 rounded-lg p-8 border-2 border-red-300 dark:border-red-700 text-center">
-            <h1 className="text-4xl font-bold mb-4 text-red-700 dark:text-red-300">
+          <div className="bg-destructive/10 rounded-lg p-8 border-2 border-destructive text-center">
+            <h1 className="text-4xl font-bold mb-4 text-destructive">
               ❌ Código Inválido
             </h1>
             <p className="mb-6 text-lg">
@@ -44,20 +44,20 @@ export default function CardPage({ params }: PageProps) {
             <div className="space-y-4 text-left">
               <div>
                 <h3 className="font-semibold mb-2">Formato esperado para Bingo 90 bolas:</h3>
-                <code className="block bg-gray-100 dark:bg-gray-800 p-3 rounded">
+                <code className="block bg-muted p-3 rounded border-2 border-border">
                   /card/123+45+6+78+0+12+345+67+89
                 </code>
               </div>
               <div>
                 <h3 className="font-semibold mb-2">Formato esperado para Bingo 75 bolas:</h3>
-                <code className="block bg-gray-100 dark:bg-gray-800 p-3 rounded">
+                <code className="block bg-muted p-3 rounded border-2 border-border">
                   /card/1359B248AC78DE135AD39BEF
                 </code>
               </div>
             </div>
             <Link
               href="/"
-              className="inline-block mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg transition"
+              className="inline-block mt-6 bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-3 px-6 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             >
               ← Voltar para Home
             </Link>
@@ -75,14 +75,14 @@ export default function CardPage({ params }: PageProps) {
           <div>
             <Link
               href="/"
-              className="text-sm text-blue-600 dark:text-blue-400 hover:underline mb-2 block"
+              className="text-sm text-primary hover:underline mb-2 block"
             >
               ← Voltar para Home
             </Link>
             <h1 className="text-3xl font-bold">
               {card.mode === "75" ? "🇺🇸" : "🇬🇧"} Cartela de Bingo {card.mode} Bolas
             </h1>
-            <p className="text-sm text-gray-600 dark:text-gray-400 font-mono mt-1">
+            <p className="text-sm text-muted-foreground font-mono mt-1">
               Código: {decodedCod}
             </p>
           </div>
@@ -91,19 +91,19 @@ export default function CardPage({ params }: PageProps) {
 
         {/* Botão BINGO! */}
         {winCheck.hasWon && showBingo && (
-          <div className="mb-6 bg-green-500 dark:bg-green-600 rounded-lg p-6 border-4 border-green-700 dark:border-green-800 relative">
+          <div className="mb-6 bg-success rounded-lg p-6 border-4 border-success shadow-lg relative">
             <button
               onClick={() => setShowBingo(false)}
-              className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-full text-white font-bold transition"
+              className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-full text-white font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               aria-label="Fechar aviso"
             >
               ✕
             </button>
             <div className="text-center">
-              <h2 className="text-6xl font-bold text-white mb-2 animate-pulse">
+              <h2 className="text-6xl font-bold text-success-foreground mb-2 animate-pulse">
                 🎉 BINGO! 🎉
               </h2>
-              <p className="text-xl text-white">
+              <p className="text-xl text-success-foreground">
                 Parabéns! Você completou o padrão:{" "}
                 <strong>{winCheck.pattern}</strong>
               </p>
@@ -133,7 +133,7 @@ export default function CardPage({ params }: PageProps) {
                 winningPositions={winCheck.winningPositions}
               />
             )}
-            <p className="text-xs text-gray-600 dark:text-gray-400 mt-4">
+            <p className="text-xs text-muted-foreground mt-4">
               💡 Clique nos números para marcar/desmarcar. Os números com borda
               vermelha foram sorteados mas ainda não foram marcados.
             </p>
@@ -151,12 +151,12 @@ export default function CardPage({ params }: PageProps) {
         </div>
 
         {/* Instruções */}
-        <div className="mt-8 bg-blue-100 dark:bg-blue-900 rounded-lg p-4 border-2 border-blue-300 dark:border-blue-700">
+        <div className="mt-8 bg-info/10 rounded-lg p-4 border-2 border-info">
           <h3 className="font-semibold mb-2">ℹ️ Como jogar:</h3>
           <ul className="space-y-1 text-sm">
             <li>
               1. Aguarde os números serem sorteados na{" "}
-              <Link href="/sort" className="text-blue-600 dark:text-blue-400 underline">
+              <Link href="/sort" className="text-primary underline hover:no-underline">
                 página de sorteio
               </Link>
             </li>

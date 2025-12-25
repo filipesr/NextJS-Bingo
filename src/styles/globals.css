@@ -2,22 +2,115 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    /* Layout & Surface Colors */
+    --background: 0 0% 100%;              /* Pure white */
+    --foreground: 222.2 47.4% 11.2%;      /* slate-900 */
+
+    --card: 0 0% 100%;                    /* Pure white */
+    --card-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    --muted: 210 40% 96.1%;               /* slate-100 */
+    --muted-foreground: 215.4 16.3% 46.9%; /* slate-500 */
+
+    --popover: 0 0% 100%;                 /* white */
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    /* Interactive Elements */
+    --primary: 221.2 83.2% 53.3%;         /* blue-600 */
+    --primary-foreground: 210 40% 98%;    /* slate-50 */
+
+    --secondary: 210 40% 96.1%;           /* slate-100 */
+    --secondary-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    --accent: 262.1 83.3% 57.8%;          /* violet-500 */
+    --accent-foreground: 210 40% 98%;     /* slate-50 */
+
+    /* UI Components */
+    --border: 214.3 31.8% 91.4%;          /* slate-200 */
+    --input: 214.3 31.8% 91.4%;           /* slate-200 */
+    --ring: 221.2 83.2% 53.3%;            /* blue-600 */
+
+    /* Semantic States */
+    --success: 142.1 76.2% 36.3%;         /* green-600 */
+    --success-foreground: 355.7 100% 97.3%; /* white */
+
+    --warning: 45.4 93.4% 47.5%;          /* yellow-600 - better contrast */
+    --warning-foreground: 222.2 47.4% 11.2%; /* dark text */
+
+    --destructive: 0 72.2% 50.6%;         /* red-600 */
+    --destructive-foreground: 210 40% 98%; /* white */
+
+    --info: 221.2 83.2% 53.3%;            /* blue-600 */
+    --info-foreground: 210 40% 98%;
+
+    /* Bingo-Specific Colors */
+    --bingo-75-header: 0 72.2% 50.6%;     /* red-600 for BINGO */
+    --bingo-90-header: 221.2 83.2% 53.3%; /* blue-600 for ranges */
+    --bingo-free: 47.9 95.8% 53.1%;       /* yellow-500 */
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* Layout & Surface Colors */
+    --background: 222.2 84% 4.9%;         /* slate-950 */
+    --foreground: 210 40% 98%;            /* slate-50 */
+
+    --card: 217.2 32.6% 17.5%;            /* slate-800 */
+    --card-foreground: 210 40% 98%;       /* slate-50 */
+
+    --muted: 217.2 32.6% 17.5%;           /* slate-800 */
+    --muted-foreground: 215 20.2% 65.1%;  /* slate-400 */
+
+    --popover: 217.2 32.6% 17.5%;         /* slate-800 */
+    --popover-foreground: 210 40% 98%;
+
+    /* Interactive Elements */
+    --primary: 217.2 91.2% 59.8%;         /* blue-500 */
+    --primary-foreground: 222.2 47.4% 11.2%; /* slate-900 */
+
+    --secondary: 217.2 32.6% 17.5%;       /* slate-800 */
+    --secondary-foreground: 210 40% 98%;  /* slate-50 */
+
+    --accent: 263.4 70% 50.4%;            /* violet-500 */
+    --accent-foreground: 210 40% 98%;
+
+    /* UI Components */
+    --border: 217.2 32.6% 17.5%;          /* slate-800 */
+    --input: 217.2 32.6% 17.5%;           /* slate-800 */
+    --ring: 224.3 76.3% 48%;              /* blue-700 */
+
+    /* Semantic States - Same colors work well in dark */
+    --success: 142.1 70.6% 45.3%;         /* green-500 */
+    --success-foreground: 355.7 100% 97.3%;
+
+    --warning: 47.9 95.8% 53.1%;          /* yellow-500 */
+    --warning-foreground: 222.2 47.4% 11.2%; /* dark text */
+
+    --destructive: 0 72.2% 50.6%;         /* red-600 */
+    --destructive-foreground: 210 40% 98%;
+
+    --info: 217.2 91.2% 59.8%;            /* blue-500 */
+    --info-foreground: 222.2 47.4% 11.2%;
+
+    /* Bingo-Specific - slightly adjusted for dark */
+    --bingo-75-header: 0 72.2% 50.6%;     /* red-600 */
+    --bingo-90-header: 217.2 91.2% 59.8%; /* blue-500 */
+    --bingo-free: 47.9 95.8% 53.1%;       /* yellow-500 */
   }
 }
 
-body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
 }
 
 @layer utilities {

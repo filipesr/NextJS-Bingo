@@ -35,24 +35,24 @@ export function BingoCell({
         !isMarked &&
           !isFree &&
           number !== null &&
-          "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700",
+          "bg-card border-border text-card-foreground hover:bg-muted/50",
         // Estado marcado
         isMarked &&
           !isWinning &&
-          "bg-blue-500 dark:bg-blue-600 border-blue-600 dark:border-blue-700 text-white",
+          "bg-primary border-primary text-primary-foreground",
         // Estado vencedor
         isWinning &&
-          "bg-green-500 dark:bg-green-600 border-green-600 dark:border-green-700 text-white animate-pulse",
+          "bg-success border-success text-success-foreground animate-pulse shadow-lg shadow-success/20",
         // FREE space
         isFree &&
-          "bg-yellow-500 dark:bg-yellow-600 border-yellow-600 dark:border-yellow-700 text-white dark:text-white",
+          "bg-warning border-warning text-warning-foreground font-extrabold",
         // Número sorteado mas não marcado
         isDrawn &&
           !isMarked &&
           !isFree &&
-          "ring-2 ring-red-500 dark:ring-red-400",
+          "ring-2 ring-destructive ring-offset-1",
         // Célula vazia (Bingo 90)
-        number === null && !isFree && "bg-gray-300 dark:bg-gray-900 border-gray-400 dark:border-gray-700"
+        number === null && !isFree && "bg-muted border-muted-foreground/20 text-muted-foreground/40"
       )}
     >
       {isFree ? (

@@ -39,12 +39,12 @@ export default function CardGeneratorPage() {
           <div>
             <Link
               href="/"
-              className="text-sm text-blue-600 dark:text-blue-400 hover:underline mb-2 block"
+              className="text-sm text-primary hover:underline mb-2 block"
             >
               ← Voltar para Home
             </Link>
             <h1 className="text-4xl font-bold">🎲 Gerar Cartela Aleatória</h1>
-            <p className="text-gray-600 dark:text-gray-400 mt-2">
+            <p className="text-muted-foreground mt-2">
               Escolha a modalidade para gerar uma cartela única
             </p>
           </div>
@@ -52,7 +52,7 @@ export default function CardGeneratorPage() {
         </header>
 
         {/* Explicação */}
-        <div className="mb-8 bg-blue-100 dark:bg-blue-900 rounded-lg p-6 border-2 border-blue-300 dark:border-blue-700">
+        <div className="mb-8 bg-info/10 rounded-lg p-6 border-2 border-info">
           <h2 className="font-semibold text-lg mb-3">ℹ️ Como funciona:</h2>
           <ul className="space-y-2 text-sm">
             <li>
@@ -75,11 +75,11 @@ export default function CardGeneratorPage() {
           <h2 className="font-semibold text-2xl mb-4">Escolha a Modalidade:</h2>
 
           {/* Bingo 75 Bolas */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border-2 border-gray-300 dark:border-gray-700 hover:border-red-500 dark:hover:border-red-500 transition">
+          <div className="bg-card rounded-lg p-6 border-2 border-border hover:border-[hsl(var(--bingo-75-header))] transition-colors">
             <div className="flex items-start gap-4">
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-2">🇺🇸 Bingo 75 Bolas (Americano)</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-muted-foreground mb-4">
                   Cartela 5×5 com colunas B-I-N-G-O e FREE space no centro
                 </p>
                 <ul className="space-y-1 text-sm mb-4">
@@ -90,7 +90,7 @@ export default function CardGeneratorPage() {
                 <button
                   onClick={() => handleGenerate("75")}
                   disabled={isGenerating}
-                  className="bg-red-600 hover:bg-red-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition"
+                  className="bg-[hsl(var(--bingo-75-header))] hover:bg-[hsl(var(--bingo-75-header))]/90 disabled:bg-muted disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   {isGenerating ? "Gerando..." : "🎲 Gerar Cartela 75 Bolas"}
                 </button>
@@ -99,11 +99,11 @@ export default function CardGeneratorPage() {
           </div>
 
           {/* Bingo 90 Bolas */}
-          <div className="bg-white dark:bg-gray-800 rounded-lg p-6 border-2 border-gray-300 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 transition">
+          <div className="bg-card rounded-lg p-6 border-2 border-border hover:border-[hsl(var(--bingo-90-header))] transition-colors">
             <div className="flex items-start gap-4">
               <div className="flex-1">
                 <h3 className="text-2xl font-bold mb-2">🇬🇧 Bingo 90 Bolas (Britânico)</h3>
-                <p className="text-gray-600 dark:text-gray-400 mb-4">
+                <p className="text-muted-foreground mb-4">
                   Cartela 9×3 com números organizados por dezenas
                 </p>
                 <ul className="space-y-1 text-sm mb-4">
@@ -114,7 +114,7 @@ export default function CardGeneratorPage() {
                 <button
                   onClick={() => handleGenerate("90")}
                   disabled={isGenerating}
-                  className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition"
+                  className="bg-[hsl(var(--bingo-90-header))] hover:bg-[hsl(var(--bingo-90-header))]/90 disabled:bg-muted disabled:cursor-not-allowed text-white font-bold py-3 px-6 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   {isGenerating ? "Gerando..." : "🎲 Gerar Cartela 90 Bolas"}
                 </button>
@@ -124,9 +124,9 @@ export default function CardGeneratorPage() {
         </div>
 
         {/* Informações Adicionais */}
-        <div className="mt-8 bg-gray-100 dark:bg-gray-800 rounded-lg p-6 border-2 border-gray-300 dark:border-gray-700">
+        <div className="mt-8 bg-muted rounded-lg p-6 border-2 border-border">
           <h3 className="font-semibold mb-3">💡 Dicas:</h3>
-          <ul className="space-y-2 text-sm text-gray-700 dark:text-gray-300">
+          <ul className="space-y-2 text-sm">
             <li>
               • A cartela gerada terá um código único na URL que você pode compartilhar
             </li>
@@ -138,7 +138,7 @@ export default function CardGeneratorPage() {
             </li>
             <li>
               • Para jogar, acesse a{" "}
-              <Link href="/sort" className="text-blue-600 dark:text-blue-400 underline">
+              <Link href="/sort" className="text-primary underline hover:no-underline">
                 página de sorteio
               </Link>
               {" "}em outra aba ou dispositivo
