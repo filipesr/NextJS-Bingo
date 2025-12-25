@@ -72,19 +72,19 @@ export default function SortPage() {
         </div>
 
         {/* Display do número atual */}
-        <div className="mb-6 bg-gradient-to-br from-yellow-400 to-orange-500 dark:from-yellow-500 dark:to-orange-600 rounded-lg p-8 border-4 border-yellow-600 dark:border-yellow-700 shadow-xl">
-          <h2 className="text-center text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4">
+        <div className="mb-6 bg-gradient-to-br from-orange-500 to-red-600 dark:from-yellow-500 dark:to-orange-600 rounded-lg p-8 border-4 border-orange-700 dark:border-yellow-700 shadow-xl">
+          <h2 className="text-center text-xl font-semibold text-white mb-4">
             {sortState.currentNumber
               ? "Número Sorteado:"
               : "Aguardando Sorteio..."}
           </h2>
           <div className="text-center">
             {sortState.currentNumber ? (
-              <div className="text-8xl font-bold text-gray-900 dark:text-white animate-pulse">
+              <div className="text-8xl font-bold text-white drop-shadow-lg animate-pulse">
                 {sortState.currentNumber}
               </div>
             ) : (
-              <div className="text-6xl font-bold text-gray-600 dark:text-gray-400">
+              <div className="text-6xl font-bold text-white/70">
                 --
               </div>
             )}

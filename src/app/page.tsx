@@ -72,18 +72,27 @@ export default function Home() {
 
             {/* Passo 2: Cartelas */}
             <div>
-              <h3 className="text-lg font-semibold mb-2">2️⃣ Usar Cartelas</h3>
+              <h3 className="text-lg font-semibold mb-2">2️⃣ Gerar ou Usar Cartelas</h3>
               <p className="mb-3">
-                Cada jogador acessa sua cartela usando um <strong>código único</strong>.
+                Você pode <strong>gerar cartelas aleatórias</strong> ou usar códigos únicos existentes.
                 A cartela sincroniza automaticamente com os números sorteados.
               </p>
-              <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                <p className="font-mono text-sm mb-2">
-                  <strong>Formato 90 bolas:</strong> /card/123+45+6+78+0+12+345+67+89
-                </p>
-                <p className="font-mono text-sm">
-                  <strong>Formato 75 bolas:</strong> /card/1359B248AC78DE135AD39BEF
-                </p>
+              <div className="space-y-3">
+                <Link
+                  href="/card"
+                  className="inline-block bg-purple-600 hover:bg-purple-700 text-white font-semibold px-6 py-3 rounded-lg transition"
+                >
+                  🎲 Gerar Cartela Aleatória
+                </Link>
+                <div className="bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
+                  <p className="text-sm mb-2">Ou use um código existente:</p>
+                  <p className="font-mono text-sm mb-1">
+                    <strong>Formato 90 bolas:</strong> /card/123+45+6+78+0+12+345+67+89
+                  </p>
+                  <p className="font-mono text-sm">
+                    <strong>Formato 75 bolas:</strong> /card/1359B248AC78DE135AD39BEF
+                  </p>
+                </div>
               </div>
             </div>
 

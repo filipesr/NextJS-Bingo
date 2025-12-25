@@ -45,7 +45,7 @@ export function BingoCell({
           "bg-green-500 dark:bg-green-600 border-green-600 dark:border-green-700 text-white animate-pulse",
         // FREE space
         isFree &&
-          "bg-yellow-400 dark:bg-yellow-500 border-yellow-500 dark:border-yellow-600 text-gray-900",
+          "bg-yellow-400 dark:bg-yellow-500 border-yellow-500 dark:border-yellow-600 text-black dark:text-gray-900",
         // Número sorteado mas não marcado
         isDrawn &&
           !isMarked &&

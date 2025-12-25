@@ -1,6 +1,6 @@
 "use client";
 
-import { use } from "react";
+import { use, useState } from "react";
 import Link from "next/link";
 import { useBingoCard } from "@/hooks/useBingoCard";
 import { BingoCard75Component } from "@/components/BingoCard/BingoCard75";
@@ -21,6 +21,7 @@ export default function CardPage({ params }: PageProps) {
   const { cod } = use(params);
   const { card, markedNumbers, drawnNumbers, toggleNumber, winCheck, stats, isValid } =
     useBingoCard(cod);
+  const [showBingo, setShowBingo] = useState(true);
 
   // Carregar último número sorteado
   const sortState = loadSortState();
@@ -87,10 +88,17 @@ export default function CardPage({ params }: PageProps) {
         </header>
 
         {/* Botão BINGO! */}
-        {winCheck.hasWon && (
-          <div className="mb-6 bg-green-500 dark:bg-green-600 rounded-lg p-6 border-4 border-green-700 dark:border-green-800 animate-pulse">
+        {winCheck.hasWon && showBingo && (
+          <div className="mb-6 bg-green-500 dark:bg-green-600 rounded-lg p-6 border-4 border-green-700 dark:border-green-800 relative">
+            <button
+              onClick={() => setShowBingo(false)}
+              className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-full text-white font-bold transition"
+              aria-label="Fechar aviso"
+            >
+              ✕
+            </button>
             <div className="text-center">
-              <h2 className="text-6xl font-bold text-white mb-2">
+              <h2 className="text-6xl font-bold text-white mb-2 animate-pulse">
                 🎉 BINGO! 🎉
               </h2>
               <p className="text-xl text-white">
