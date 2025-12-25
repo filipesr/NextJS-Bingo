@@ -19,8 +19,10 @@ interface PageProps {
  */
 export default function CardPage({ params }: PageProps) {
   const { cod } = use(params);
+  // Decodificar URL (+ é codificado como %2B)
+  const decodedCod = decodeURIComponent(cod);
   const { card, markedNumbers, drawnNumbers, toggleNumber, winCheck, stats, isValid } =
-    useBingoCard(cod);
+    useBingoCard(decodedCod);
   const [showBingo, setShowBingo] = useState(true);
 
   // Carregar último número sorteado
@@ -37,7 +39,7 @@ export default function CardPage({ params }: PageProps) {
               ❌ Código Inválido
             </h1>
             <p className="mb-6 text-lg">
-              O código da cartela &quot;{cod}&quot; não é válido.
+              O código da cartela &quot;{decodedCod}&quot; não é válido.
             </p>
             <div className="space-y-4 text-left">
               <div>
@@ -81,7 +83,7 @@ export default function CardPage({ params }: PageProps) {
               {card.mode === "75" ? "🇺🇸" : "🇬🇧"} Cartela de Bingo {card.mode} Bolas
             </h1>
             <p className="text-sm text-gray-600 dark:text-gray-400 font-mono mt-1">
-              Código: {cod}
+              Código: {decodedCod}
             </p>
           </div>
           <ThemeToggle />

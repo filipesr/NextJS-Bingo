@@ -89,95 +89,100 @@ export function generateRandomCard75(): BingoCard75 | null {
  */
 export function generateRandomCard90(): BingoCard90 | null {
   try {
-    // Gerar 15 números distribuídos em 9 grupos (dezenas)
-    const numbersByGroup: number[][] = Array(9)
+    // Para Bingo 90, cada linha deve ter exatamente 5 números
+    // Estratégia: primeiro criar o layout (quais células terão números),
+    // depois preencher com números aleatórios válidos
+
+    let grid: (number | null)[][] = [];
+    let numbersByGroup: number[][] = [];
+    let attempts = 0;
+    const maxAttempts = 100;
+
+    // Tentar gerar um layout válido
+    while (attempts < maxAttempts) {
+      attempts++;
+
+      // Criar grid 3x9 vazio
+      grid = Array(3)
+        .fill(null)
+        .map(() => Array(9).fill(null));
+
+      // Para cada linha, selecionar aleatoriamente 5 colunas para ter números
+      for (let row = 0; row < 3; row++) {
+        const availableColumns = Array.from({ length: 9 }, (_, i) => i);
+        const shuffledColumns = shuffle(availableColumns);
+        const selectedColumns = shuffledColumns.slice(0, 5);
+
+        // Marcar essas colunas com um placeholder
+        for (const col of selectedColumns) {
+          grid[row][col] = -1; // Placeholder temporário
+        }
+      }
+
+      // Verificar se o layout é válido:
+      // - Cada coluna deve ter no máximo 3 números
+      // - No máximo 2 colunas podem estar vazias (mínimo 7 com números)
+      const columnCounts = Array(9).fill(0);
+      for (let col = 0; col < 9; col++) {
+        for (let row = 0; row < 3; row++) {
+          if (grid[row][col] !== null) {
+            columnCounts[col]++;
+          }
+        }
+      }
+
+      const maxPerColumn = Math.max(...columnCounts);
+      const emptyColumns = columnCounts.filter(c => c === 0).length;
+
+      if (maxPerColumn <= 3 && emptyColumns <= 2) {
+        // Layout válido encontrado!
+        break;
+      }
+    }
+
+    if (attempts >= maxAttempts) {
+      console.error("Não foi possível gerar um layout válido após", maxAttempts, "tentativas");
+      return null;
+    }
+
+    // Agora preencher o grid com números reais
+    numbersByGroup = Array(9)
       .fill(null)
       .map(() => []);
 
-    // Distribuir números: 15 números total, cada linha tem 5 números
-    // Precisamos garantir que cada linha tenha exatamente 5 números
-
-    // Estratégia: selecionar aleatoriamente quais grupos terão números
-    // e quantos números cada grupo terá (respeitando mín 1, máx 3 por grupo)
-
-    const totalNumbers = 15;
-    let numbersPlaced = 0;
-    const groupCounts = Array(9).fill(0);
-
-    // Distribuir contagens aleatoriamente
-    while (numbersPlaced < totalNumbers) {
-      const groupIndex = Math.floor(Math.random() * 9);
-
-      // Permitir no máximo 3 números por grupo
-      if (groupCounts[groupIndex] < 3) {
-        groupCounts[groupIndex]++;
-        numbersPlaced++;
-      }
-    }
-
-    // Garantir que no máximo 2 grupos estejam vazios
-    const emptyGroups = groupCounts.filter(c => c === 0).length;
-    if (emptyGroups > 2) {
-      // Redistribuir: pegar números de grupos cheios e colocar nos vazios
-      const fullGroups = groupCounts
-        .map((count, index) => ({ count, index }))
-        .filter(g => g.count > 1)
-        .sort((a, b) => b.count - a.count);
-
-      const emptyGroupIndices = groupCounts
-        .map((count, index) => ({ count, index }))
-        .filter(g => g.count === 0)
-        .map(g => g.index);
-
-      let redistributed = 0;
-      for (let i = 0; i < emptyGroupIndices.length && redistributed < emptyGroups - 2; i++) {
-        const emptyIndex = emptyGroupIndices[i];
-        const fullGroup = fullGroups[i % fullGroups.length];
-
-        if (fullGroup && groupCounts[fullGroup.index] > 1) {
-          groupCounts[fullGroup.index]--;
-          groupCounts[emptyIndex]++;
-          redistributed++;
+    for (let col = 0; col < 9; col++) {
+      // Coletar quais linhas precisam de números nesta coluna
+      const rowsWithNumbers: number[] = [];
+      for (let row = 0; row < 3; row++) {
+        if (grid[row][col] !== null) {
+          rowsWithNumbers.push(row);
         }
       }
-    }
 
-    // Gerar números para cada grupo
-    for (let groupIndex = 0; groupIndex < 9; groupIndex++) {
-      const count = groupCounts[groupIndex];
-      if (count === 0) continue;
+      if (rowsWithNumbers.length === 0) continue;
 
-      const base = groupIndex * 10;
+      // Gerar números aleatórios para esta coluna
+      const base = col * 10;
       const min = base + 1;
       const max = base + 10;
 
-      // Gerar números disponíveis para este grupo
       const available = Array.from({ length: 10 }, (_, i) => min + i);
       const shuffled = shuffle(available);
-      const selected = shuffled.slice(0, count).sort((a, b) => a - b);
+      const selected = shuffled.slice(0, rowsWithNumbers.length).sort((a, b) => a - b);
 
-      numbersByGroup[groupIndex] = selected;
+      // Atribuir números às linhas
+      for (let i = 0; i < rowsWithNumbers.length; i++) {
+        const row = rowsWithNumbers[i];
+        grid[row][col] = selected[i];
+      }
+
+      numbersByGroup[col] = selected;
     }
 
     // Gerar código
     const code = encode90(numbersByGroup);
     if (!code) {
       return null;
-    }
-
-    // Criar grid 9x3
-    // Cada linha deve ter exatamente 5 números e 4 espaços vazios
-    const grid: (number | null)[][] = Array(3)
-      .fill(null)
-      .map(() => Array(9).fill(null));
-
-    // Distribuir números no grid
-    // Para cada coluna, distribuir seus números nas linhas
-    for (let col = 0; col < 9; col++) {
-      const colNumbers = numbersByGroup[col];
-      for (let i = 0; i < colNumbers.length; i++) {
-        grid[i][col] = colNumbers[i];
-      }
     }
 
     return {

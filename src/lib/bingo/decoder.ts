@@ -78,23 +78,65 @@ export function decode90(code: string): BingoCard90 | null {
 /**
  * Cria o grid 9x3 para Bingo 90 bolas
  * Distribui os 15 números em 3 linhas, cada linha com 5 números e 4 espaços vazios
+ * Usa algoritmo determinístico para garantir consistência
  */
 function createGrid90(numbersByGroup: number[][]): (number | null)[][] {
   const grid: (number | null)[][] = Array(3)
     .fill(null)
     .map(() => Array(9).fill(null));
 
-  // Distribuir números no grid
-  // Cada coluna (grupo) pode ter 0-3 números
-  // Cada linha deve ter exatamente 5 números
+  // Contar números disponíveis por coluna
+  const columnCounts = numbersByGroup.map(group => group.length);
+  const rowCounts = [0, 0, 0]; // Contador de números por linha
 
+  // Para cada coluna, decidir em quais linhas colocar números
   for (let col = 0; col < 9; col++) {
-    const columnNumbers = numbersByGroup[col];
-    const numberCount = columnNumbers.length;
+    const numbersInCol = columnCounts[col];
+    if (numbersInCol === 0) continue;
 
-    // Distribuir números desta coluna nas linhas
-    for (let i = 0; i < numberCount; i++) {
-      grid[i][col] = columnNumbers[i];
+    // Determinar quais linhas receberão números desta coluna
+    // Usar hash determinístico baseado nos números da coluna
+    const colNumbers = numbersByGroup[col];
+    const rowAssignments: number[] = [];
+
+    // Criar seed baseado na soma dos números da coluna
+    const seed = colNumbers.reduce((sum, num) => sum + num, 0);
+
+    // Gerar lista de linhas candidatas (0, 1, 2)
+    const availableRows = [0, 1, 2];
+
+    // Embaralhar deterministicamente usando o seed
+    for (let i = availableRows.length - 1; i > 0; i--) {
+      const j = (seed * (i + 1) * 17) % (i + 1); // Hash determinístico
+      [availableRows[i], availableRows[j]] = [availableRows[j], availableRows[i]];
+    }
+
+    // Atribuir números às linhas, priorizando linhas com menos números
+    for (let i = 0; i < numbersInCol; i++) {
+      // Encontrar a linha com menos números que ainda pode receber mais
+      let targetRow = -1;
+      let minCount = Infinity;
+
+      for (const row of availableRows) {
+        if (rowCounts[row] < 5 && rowCounts[row] < minCount) {
+          minCount = rowCounts[row];
+          targetRow = row;
+        }
+      }
+
+      if (targetRow === -1) {
+        // Fallback: usar hash se todas as linhas estão cheias (não deveria acontecer)
+        targetRow = (seed + i) % 3;
+      }
+
+      rowAssignments.push(targetRow);
+      rowCounts[targetRow]++;
+    }
+
+    // Colocar os números no grid
+    for (let i = 0; i < numbersInCol; i++) {
+      const row = rowAssignments[i];
+      grid[row][col] = colNumbers[i];
     }
   }
 

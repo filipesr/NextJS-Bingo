@@ -29,161 +29,73 @@ export function checkWin75(
     })
   );
 
-  // Se pattern não especificado, verificar todos os padrões básicos
-  if (!pattern) {
-    // Verificar linhas horizontais
-    for (let row = 0; row < 5; row++) {
-      if (marked[row].every((m) => m)) {
-        return {
-          hasWon: true,
-          pattern: "horizontal",
-          winningPositions: Array.from({ length: 5 }, (_, col) => [row, col]),
-        };
-      }
-    }
+  // Coletar TODOS os padrões completos
+  const completedPatterns: [number, number][] = [];
 
-    // Verificar linhas verticais
-    for (let col = 0; col < 5; col++) {
-      if (marked.every((row) => row[col])) {
-        return {
-          hasWon: true,
-          pattern: "vertical",
-          winningPositions: Array.from({ length: 5 }, (_, row) => [row, col]),
-        };
-      }
+  // Verificar linhas horizontais
+  for (let row = 0; row < 5; row++) {
+    if (marked[row].every((m) => m)) {
+      completedPatterns.push(
+        ...Array.from({ length: 5 }, (_, col) => [row, col] as [number, number])
+      );
     }
-
-    // Verificar diagonal principal (↘)
-    if (marked.every((row, i) => row[i])) {
-      return {
-        hasWon: true,
-        pattern: "diagonal",
-        winningPositions: Array.from({ length: 5 }, (_, i) => [i, i]),
-      };
-    }
-
-    // Verificar diagonal secundária (↙)
-    if (marked.every((row, i) => row[4 - i])) {
-      return {
-        hasWon: true,
-        pattern: "diagonal",
-        winningPositions: Array.from({ length: 5 }, (_, i) => [i, 4 - i]),
-      };
-    }
-
-    // Verificar blackout (cartela cheia)
-    if (marked.every((row) => row.every((m) => m))) {
-      return {
-        hasWon: true,
-        pattern: "blackout",
-        winningPositions: marked.flatMap((row, r) =>
-          row.map((_, c) => [r, c] as [number, number])
-        ),
-      };
-    }
-
-    return { hasWon: false };
   }
 
-  // Verificar padrão específico
-  switch (pattern) {
-    case "horizontal":
-      for (let row = 0; row < 5; row++) {
-        if (marked[row].every((m) => m)) {
-          return {
-            hasWon: true,
-            pattern: "horizontal",
-            winningPositions: Array.from({ length: 5 }, (_, col) => [
-              row,
-              col,
-            ]),
-          };
-        }
-      }
-      break;
+  // Verificar linhas verticais
+  for (let col = 0; col < 5; col++) {
+    if (marked.every((row) => row[col])) {
+      completedPatterns.push(
+        ...Array.from({ length: 5 }, (_, row) => [row, col] as [number, number])
+      );
+    }
+  }
 
-    case "vertical":
-      for (let col = 0; col < 5; col++) {
-        if (marked.every((row) => row[col])) {
-          return {
-            hasWon: true,
-            pattern: "vertical",
-            winningPositions: Array.from({ length: 5 }, (_, row) => [
-              row,
-              col,
-            ]),
-          };
-        }
-      }
-      break;
+  // Verificar diagonal principal (↘)
+  if (marked.every((row, i) => row[i])) {
+    completedPatterns.push(
+      ...Array.from({ length: 5 }, (_, i) => [i, i] as [number, number])
+    );
+  }
 
-    case "diagonal":
-      // Diagonal principal
-      if (marked.every((row, i) => row[i])) {
-        return {
-          hasWon: true,
-          pattern: "diagonal",
-          winningPositions: Array.from({ length: 5 }, (_, i) => [i, i]),
-        };
-      }
-      // Diagonal secundária
-      if (marked.every((row, i) => row[4 - i])) {
-        return {
-          hasWon: true,
-          pattern: "diagonal",
-          winningPositions: Array.from({ length: 5 }, (_, i) => [i, 4 - i]),
-        };
-      }
-      break;
+  // Verificar diagonal secundária (↙)
+  if (marked.every((row, i) => row[4 - i])) {
+    completedPatterns.push(
+      ...Array.from({ length: 5 }, (_, i) => [i, 4 - i] as [number, number])
+    );
+  }
 
-    case "four-corners":
-      if (marked[0][0] && marked[0][4] && marked[4][0] && marked[4][4]) {
-        return {
-          hasWon: true,
-          pattern: "four-corners",
-          winningPositions: [
-            [0, 0],
-            [0, 4],
-            [4, 0],
-            [4, 4],
-          ],
-        };
-      }
-      break;
+  // Verificar four-corners
+  if (marked[0][0] && marked[0][4] && marked[4][0] && marked[4][4]) {
+    completedPatterns.push([0, 0], [0, 4], [4, 0], [4, 4]);
+  }
 
-    case "x-pattern":
-      // Ambas diagonais completas
-      const diag1 = marked.every((row, i) => row[i]);
-      const diag2 = marked.every((row, i) => row[4 - i]);
-      if (diag1 && diag2) {
-        return {
-          hasWon: true,
-          pattern: "x-pattern",
-          winningPositions: [
-            ...Array.from({ length: 5 }, (_, i) => [i, i] as [number, number]),
-            ...Array.from({ length: 5 }, (_, i) => [i, 4 - i] as [
-              number,
-              number
-            ]),
-          ].filter(
-            ([r, c], i, arr) =>
-              arr.findIndex(([r2, c2]) => r2 === r && c2 === c) === i
-          ), // Remove duplicata do centro
-        };
-      }
-      break;
+  // Remover duplicatas (mesma célula pode estar em múltiplos padrões)
+  const uniquePositions = completedPatterns.filter(
+    ([r, c], i, arr) =>
+      arr.findIndex(([r2, c2]) => r2 === r && c2 === c) === i
+  );
 
-    case "blackout":
-      if (marked.every((row) => row.every((m) => m))) {
-        return {
-          hasWon: true,
-          pattern: "blackout",
-          winningPositions: marked.flatMap((row, r) =>
-            row.map((_, c) => [r, c] as [number, number])
-          ),
-        };
-      }
-      break;
+  // Verificar blackout (cartela cheia)
+  const isBlackout = marked.every((row) => row.every((m) => m));
+
+  // Vitória APENAS quando blackout
+  if (isBlackout) {
+    return {
+      hasWon: true,
+      pattern: "blackout",
+      winningPositions: marked.flatMap((row, r) =>
+        row.map((_, c) => [r, c] as [number, number])
+      ),
+    };
+  }
+
+  // Se tem padrões completos mas não é blackout, retornar posições para destaque
+  // mas hasWon = false
+  if (uniquePositions.length > 0) {
+    return {
+      hasWon: false,
+      winningPositions: uniquePositions,
+    };
   }
 
   return { hasWon: false };
@@ -204,93 +116,40 @@ export function checkWin90(
 ): WinCheck {
   const { grid } = card;
 
-  // Criar grid de marcações (true = marcado, false = não marcado/vazio)
-  const marked: boolean[][] = grid.map((row) =>
-    row.map((num) => {
-      if (num === null) return false; // Espaço vazio
-      return markedNumbers.includes(num);
-    })
-  );
+  // Detectar TODAS as linhas completas
+  let completedLines = 0;
+  const allCompletedPositions: [number, number][] = [];
 
-  // Se pattern não especificado, verificar todos os padrões
-  if (!pattern) {
-    // Verificar 1 linha completa
-    for (let row = 0; row < 3; row++) {
-      const rowNumbers = grid[row].filter((n) => n !== null);
-      const rowMarked = rowNumbers.every((n) => markedNumbers.includes(n!));
-      if (rowMarked && rowNumbers.length > 0) {
-        return {
-          hasWon: true,
-          pattern: "one-line",
-          winningPositions: grid[row]
-            .map((num, col) => (num !== null ? [row, col] : null))
-            .filter((pos) => pos !== null) as [number, number][],
-        };
-      }
+  for (let row = 0; row < 3; row++) {
+    const rowNumbers = grid[row].filter((n) => n !== null);
+    const rowMarked = rowNumbers.every((n) => markedNumbers.includes(n!));
+
+    if (rowMarked && rowNumbers.length > 0) {
+      completedLines++;
+      // Adicionar todas as posições desta linha
+      const rowPositions = grid[row]
+        .map((num, col) => (num !== null ? [row, col] as [number, number] : null))
+        .filter((pos): pos is [number, number] => pos !== null);
+      allCompletedPositions.push(...rowPositions);
     }
-
-    return { hasWon: false };
   }
 
-  // Verificar padrão específico
-  switch (pattern) {
-    case "one-line":
-      for (let row = 0; row < 3; row++) {
-        const rowNumbers = grid[row].filter((n) => n !== null);
-        const rowMarked = rowNumbers.every((n) => markedNumbers.includes(n!));
-        if (rowMarked && rowNumbers.length > 0) {
-          return {
-            hasWon: true,
-            pattern: "one-line",
-            winningPositions: grid[row]
-              .map((num, col) => (num !== null ? [row, col] : null))
-              .filter((pos) => pos !== null) as [number, number][],
-          };
-        }
-      }
-      break;
+  // Vitória APENAS quando 3 linhas completas (full-house)
+  if (completedLines === 3) {
+    return {
+      hasWon: true,
+      pattern: "full-house",
+      winningPositions: allCompletedPositions,
+    };
+  }
 
-    case "two-lines":
-      let completedLines = 0;
-      const linePositions: [number, number][] = [];
-
-      for (let row = 0; row < 3; row++) {
-        const rowNumbers = grid[row].filter((n) => n !== null);
-        const rowMarked = rowNumbers.every((n) => markedNumbers.includes(n!));
-        if (rowMarked && rowNumbers.length > 0) {
-          completedLines++;
-          linePositions.push(
-            ...(grid[row]
-              .map((num, col) => (num !== null ? [row, col] : null))
-              .filter((pos) => pos !== null) as [number, number][])
-          );
-        }
-      }
-
-      if (completedLines >= 2) {
-        return {
-          hasWon: true,
-          pattern: "two-lines",
-          winningPositions: linePositions,
-        };
-      }
-      break;
-
-    case "full-house":
-      const allNumbers = grid.flat().filter((n) => n !== null);
-      const allMarked = allNumbers.every((n) => markedNumbers.includes(n!));
-      if (allMarked) {
-        return {
-          hasWon: true,
-          pattern: "full-house",
-          winningPositions: grid.flatMap((row, r) =>
-            row
-              .map((num, c) => (num !== null ? [r, c] : null))
-              .filter((pos) => pos !== null)
-          ) as [number, number][],
-        };
-      }
-      break;
+  // Se tem linhas completas mas não é full-house, retornar posições para destaque visual
+  // mas hasWon = false
+  if (completedLines > 0) {
+    return {
+      hasWon: false,
+      winningPositions: allCompletedPositions,
+    };
   }
 
   return { hasWon: false };

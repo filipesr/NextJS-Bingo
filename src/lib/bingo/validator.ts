@@ -68,6 +68,14 @@ export function validateCard90(card: BingoCard90): boolean {
       return false;
     }
 
+    // Validar que cada linha tem exatamente 5 números
+    for (const row of card.grid) {
+      const numbersInRow = row.filter((cell) => cell !== null).length;
+      if (numbersInRow !== 5) {
+        return false;
+      }
+    }
+
     return true;
   } catch (error) {
     return false;
