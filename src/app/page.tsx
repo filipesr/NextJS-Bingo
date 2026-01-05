@@ -24,30 +24,43 @@ export default function Home() {
 
         {/* Atalhos Rápidos */}
         <section className="mb-12">
-          <h2 className="text-2xl font-semibold mb-4">Acesso Rápido</h2>
-          <div className="grid md:grid-cols-2 gap-4">
+          <h2 className="text-2xl font-semibold mb-6">Acesso Rápido</h2>
+          <div className="grid md:grid-cols-2 gap-6">
             <Link
               href="/sort"
-              className="flex items-center gap-4 bg-card hover:bg-accent/10 border-2 border-border hover:border-accent p-6 rounded-lg transition-colors group"
+              className="relative overflow-hidden group rounded-xl border-2 border-border bg-card p-8 hover:border-primary transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             >
-              <div className="text-5xl">🎰</div>
-              <div>
-                <h3 className="font-bold text-xl mb-1 group-hover:text-accent transition-colors">Sorteio</h3>
-                <p className="text-sm text-muted-foreground">
-                  Sortear números para o jogo
+              <div className="absolute -right-4 -top-4 opacity-[0.05] group-hover:opacity-10 transition-opacity select-none">
+                <span className="text-[10rem]">🎰</span>
+              </div>
+              <div className="relative z-10">
+                <div className="text-4xl mb-4">🎰</div>
+                <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">Sorteio</h3>
+                <p className="text-muted-foreground mb-6">
+                  Inicie um novo jogo, sorteie números e narre as partidas para seus amigos.
                 </p>
+                <div className="inline-flex items-center gap-2 font-semibold text-primary">
+                   Sortear Números <span className="transition-transform group-hover:translate-x-1">→</span>
+                </div>
               </div>
             </Link>
+            
             <Link
               href="/card"
-              className="flex items-center gap-4 bg-card hover:bg-accent/10 border-2 border-border hover:border-accent p-6 rounded-lg transition-colors group"
+              className="relative overflow-hidden group rounded-xl border-2 border-border bg-card p-8 hover:border-primary transition-all duration-300 hover:shadow-xl hover:-translate-y-1"
             >
-              <div className="text-5xl">🎲</div>
-              <div>
-                <h3 className="font-bold text-xl mb-1 group-hover:text-accent transition-colors">Cartela</h3>
-                <p className="text-sm text-muted-foreground">
-                  Gerar cartela aleatória
+              <div className="absolute -right-4 -top-4 opacity-[0.05] group-hover:opacity-10 transition-opacity select-none">
+                <span className="text-[10rem]">🎲</span>
+              </div>
+              <div className="relative z-10">
+                <div className="text-4xl mb-4">🎲</div>
+                <h3 className="text-2xl font-bold mb-2 group-hover:text-primary transition-colors">Gerar Cartela</h3>
+                <p className="text-muted-foreground mb-6">
+                  Crie sua cartela digital aleatória para jogar. Compatível com Bingo 75 e 90.
                 </p>
+                <div className="inline-flex items-center gap-2 font-semibold text-primary">
+                   Criar Cartela <span className="transition-transform group-hover:translate-x-1">→</span>
+                </div>
               </div>
             </Link>
           </div>

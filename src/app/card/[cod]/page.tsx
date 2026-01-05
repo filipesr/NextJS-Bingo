@@ -8,6 +8,8 @@ import { BingoCard90Component } from "@/components/BingoCard/BingoCard90";
 import { StatsPanel } from "@/components/StatsPanel/StatsPanel";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Collapsible } from "@/components/ui/Collapsible";
+import { useWakeLock } from "@/hooks/useWakeLock";
+import { Confetti } from "@/components/ui/Confetti";
 
 interface PageProps {
   params: Promise<{ cod: string }>;
@@ -24,6 +26,17 @@ export default function CardPage({ params }: PageProps) {
   const { card, markedNumbers, drawnNumbers, toggleNumber, winCheck, stats, isValid } =
     useBingoCard(decodedCod);
   const [showBingo, setShowBingo] = useState(true);
+  
+  // Prevent screen sleep
+  useWakeLock();
+
+  const handleNumberClick = (number: number) => {
+    // Haptic feedback
+    if (typeof navigator !== "undefined" && navigator.vibrate) {
+      navigator.vibrate(50);
+    }
+    toggleNumber(number);
+  };
 
   // Código inválido
   if (!isValid || !card) {
@@ -87,24 +100,27 @@ export default function CardPage({ params }: PageProps) {
 
         {/* Botão BINGO! */}
         {winCheck.hasWon && showBingo && (
-          <div className="mb-6 bg-success rounded-lg p-6 border-4 border-success shadow-lg relative">
-            <button
-              onClick={() => setShowBingo(false)}
-              className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-full text-white font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-              aria-label="Fechar aviso"
-            >
-              ✕
-            </button>
-            <div className="text-center">
-              <h2 className="text-6xl font-bold text-success-foreground mb-2 animate-pulse">
-                🎉 BINGO! 🎉
-              </h2>
-              <p className="text-xl text-success-foreground">
-                Parabéns! Você completou o padrão:{" "}
-                <strong>{winCheck.pattern}</strong>
-              </p>
+          <>
+            <Confetti />
+            <div className="mb-6 bg-success rounded-lg p-6 border-4 border-success shadow-lg relative animate-in zoom-in duration-500">
+              <button
+                onClick={() => setShowBingo(false)}
+                className="absolute top-2 right-2 w-8 h-8 flex items-center justify-center bg-white/20 hover:bg-white/30 rounded-full text-white font-bold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                aria-label="Fechar aviso"
+              >
+                ✕
+              </button>
+              <div className="text-center">
+                <h2 className="text-6xl font-bold text-success-foreground mb-2 animate-pulse">
+                  🎉 BINGO! 🎉
+                </h2>
+                <p className="text-xl text-success-foreground">
+                  Parabéns! Você completou o padrão:{" "}
+                  <strong>{winCheck.pattern}</strong>
+                </p>
+              </div>
             </div>
-          </div>
+          </>
         )}
 
         {/* Grid Principal */}
@@ -117,7 +133,7 @@ export default function CardPage({ params }: PageProps) {
                 card={card}
                 markedNumbers={markedNumbers}
                 drawnNumbers={drawnNumbers}
-                onNumberClick={toggleNumber}
+                onNumberClick={handleNumberClick}
                 winningPositions={winCheck.winningPositions}
               />
             ) : (
@@ -125,7 +141,7 @@ export default function CardPage({ params }: PageProps) {
                 card={card}
                 markedNumbers={markedNumbers}
                 drawnNumbers={drawnNumbers}
-                onNumberClick={toggleNumber}
+                onNumberClick={handleNumberClick}
                 winningPositions={winCheck.winningPositions}
               />
             )}

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import Link from "next/link";
 import type { BingoMode } from "@/lib/bingo/types";
 import { useBingoSort } from "@/hooks/useBingoSort";
@@ -8,6 +8,10 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Collapsible } from "@/components/ui/Collapsible";
 import { getNumberWithLetter } from "@/lib/bingo/utils";
 import { getNumberCall } from "@/lib/bingo/calls";
+import { useSpeech } from "@/hooks/useSpeech";
+import { useToast } from "@/hooks/useToast";
+
+import { Modal } from "@/components/ui/Modal";
 
 /**
  * Página de sorteio de números do Bingo
@@ -19,16 +23,63 @@ export default function SortPage() {
   const { sortState, draw, reset, changeMode, hasMoreNumbers, drawnCount, totalNumbers } =
     useBingoSort(mode);
 
-  // Função para mudar modalidade
-  const handleModeChange = (newMode: BingoMode) => {
-    if (
-      sortState.drawnNumbers.length > 0 &&
-      !confirm("Trocar a modalidade irá resetar o jogo. Confirmar?")
-    ) {
-      return;
+  const { speak, isMuted, toggleMute, supported: speechSupported } = useSpeech();
+  const { success, info } = useToast();
+
+  const [isResetModalOpen, setIsResetModalOpen] = useState(false);
+  const [isModeModalOpen, setIsModeModalOpen] = useState(false);
+  const [pendingMode, setPendingMode] = useState<BingoMode | null>(null);
+
+  // Efeito para falar o número sorteado
+  useEffect(() => {
+    if (sortState.currentNumber) {
+      const call = getNumberCall(sortState.currentNumber, mode);
+      const letter = mode === "75" ? getNumberWithLetter(sortState.currentNumber).charAt(0) : "";
+      
+      let text = "";
+      if (mode === "75") {
+        text = `${letter}, ${sortState.currentNumber}`;
+      } else {
+        text = `${sortState.currentNumber}`;
+      }
+      
+      if (call) {
+        text += `. ${call}`;
+      }
+      
+      speak(text);
     }
+  }, [sortState.currentNumber, mode, speak]);
+
+  const handleResetClick = () => {
+    if (sortState.drawnNumbers.length > 0) {
+      setIsResetModalOpen(true);
+    } else {
+      performReset();
+    }
+  };
+
+  const performReset = () => {
+    reset();
+    success("Jogo resetado com sucesso!");
+  };
+
+  const handleModeChangeClick = (newMode: BingoMode) => {
+    if (newMode === mode) return;
+
+    if (sortState.drawnNumbers.length > 0) {
+      setPendingMode(newMode);
+      setIsModeModalOpen(true);
+    } else {
+      performModeChange(newMode);
+    }
+  };
+
+  const performModeChange = (newMode: BingoMode) => {
     setMode(newMode);
     changeMode(newMode);
+    info(`Modo alterado para Bingo ${newMode} bolas`);
+    setPendingMode(null);
   };
 
   // Números ordenados conforme preferência do usuário
@@ -38,6 +89,13 @@ export default function SortPage() {
     }
     return sortState.drawnNumbers;
   }, [sortState.drawnNumbers, sortOrder]);
+
+  // Últimos 5 números (excluindo o atual)
+  const last5Numbers = useMemo(() => {
+    const history = [...sortState.drawnNumbers];
+    if (history.length > 0) history.pop(); // Remove atual
+    return history.slice(-5).reverse();
+  }, [sortState.drawnNumbers]);
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -53,7 +111,22 @@ export default function SortPage() {
             </Link>
             <h1 className="text-4xl font-bold">🎰 Sorteio de Bingo</h1>
           </div>
-          <ThemeToggle />
+          <div className="flex gap-2">
+            {speechSupported && (
+              <button
+                onClick={toggleMute}
+                className={`p-2 rounded-full border-2 transition-colors ${
+                  isMuted 
+                    ? "bg-muted text-muted-foreground border-border" 
+                    : "bg-primary text-primary-foreground border-primary"
+                }`}
+                title={isMuted ? "Ativar som" : "Desativar som"}
+              >
+                {isMuted ? "🔇" : "🔊"}
+              </button>
+            )}
+            <ThemeToggle />
+          </div>
         </header>
 
         {/* Seletor de modalidade */}
@@ -61,7 +134,7 @@ export default function SortPage() {
           <h2 className="font-semibold mb-3">Modalidade:</h2>
           <div className="flex gap-4">
             <button
-              onClick={() => handleModeChange("75")}
+              onClick={() => handleModeChangeClick("75")}
               className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 mode === "75"
                   ? "bg-[hsl(var(--bingo-75-header))] text-white"
@@ -71,7 +144,7 @@ export default function SortPage() {
               🇺🇸 Bingo 75 Bolas
             </button>
             <button
-              onClick={() => handleModeChange("90")}
+              onClick={() => handleModeChangeClick("90")}
               className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                 mode === "90"
                   ? "bg-[hsl(var(--bingo-90-header))] text-white"
@@ -84,16 +157,18 @@ export default function SortPage() {
         </div>
 
         {/* Display do número atual */}
-        <div className="mb-6 bg-warning/20 rounded-lg p-8 border-4 border-warning shadow-xl">
-          <h2 className="text-center text-xl font-semibold mb-4">
+        <div className="mb-6 bg-warning/20 rounded-lg p-8 border-4 border-warning shadow-xl relative overflow-hidden group">
+          <div className="absolute inset-0 bg-warning/5 opacity-0 group-hover:opacity-100 transition-opacity" />
+          
+          <h2 className="text-center text-xl font-semibold mb-4 relative z-10">
             {sortState.currentNumber
               ? "Número Sorteado:"
               : "Aguardando Sorteio..."}
           </h2>
-          <div className="text-center">
+          <div className="text-center relative z-10">
             {sortState.currentNumber ? (
-              <>
-                <div className="text-8xl font-bold drop-shadow-lg animate-pulse">
+              <div key={sortState.currentNumber} className="animate-in zoom-in fade-in duration-300">
+                <div className="text-9xl font-black drop-shadow-xl tracking-tighter text-warning-foreground">
                   {mode === "75"
                     ? getNumberWithLetter(sortState.currentNumber)
                     : sortState.currentNumber}
@@ -101,35 +176,84 @@ export default function SortPage() {
 
                 {/* Apelido/chamada do número */}
                 {getNumberCall(sortState.currentNumber, mode) && (
-                  <div className="text-2xl mt-4 italic ">
+                  <div className="text-3xl mt-4 italic font-medium text-warning-foreground/90">
                     &quot;{getNumberCall(sortState.currentNumber, mode)}&quot;
                   </div>
                 )}
-              </>
+              </div>
             ) : (
-              <div className="text-6xl font-bold text-muted-foreground">
+              <div className="text-8xl font-bold text-muted-foreground/30">
                 --
               </div>
             )}
           </div>
         </div>
 
+        {/* Últimos 5 Números */}
+        {last5Numbers.length > 0 && (
+          <div className="mb-6 flex items-center justify-center gap-4 py-4 overflow-x-auto">
+            <span className="text-sm font-semibold text-muted-foreground whitespace-nowrap">Últimos 5:</span>
+            <div className="flex gap-2">
+              {last5Numbers.map((num, i) => (
+                <div 
+                  key={`${num}-${i}`} 
+                  className="w-12 h-12 flex items-center justify-center rounded-full bg-secondary border-2 border-border font-bold text-sm shadow-sm"
+                >
+                  {num}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Controles */}
         <div className="mb-6 flex gap-4">
           <button
             onClick={draw}
             disabled={!hasMoreNumbers}
-            className="flex-1 bg-success hover:bg-success/90 disabled:bg-muted disabled:cursor-not-allowed text-success-foreground font-bold py-4 px-6 rounded-lg text-xl transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex-1 bg-success hover:bg-success/90 disabled:bg-muted disabled:cursor-not-allowed text-success-foreground font-bold py-4 px-6 rounded-lg text-xl transition-all active:scale-95 shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
             {hasMoreNumbers ? "🎲 Sortear Próximo" : "Sem Mais Números"}
           </button>
           <button
-            onClick={reset}
-            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-bold py-4 px-6 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            onClick={handleResetClick}
+            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-bold py-4 px-6 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
           >
             🔄 Resetar
           </button>
         </div>
+
+        {/* Modals */}
+        <Modal
+          isOpen={isResetModalOpen}
+          onClose={() => setIsResetModalOpen(false)}
+          title="Resetar Jogo?"
+          confirmLabel="Sim, Resetar"
+          onConfirm={performReset}
+          variant="destructive"
+        >
+          <p>
+            Tem certeza que deseja resetar o jogo atual? Todo o progresso será
+            perdido.
+          </p>
+        </Modal>
+
+        <Modal
+          isOpen={isModeModalOpen}
+          onClose={() => {
+            setIsModeModalOpen(false);
+            setPendingMode(null);
+          }}
+          title="Mudar Modalidade?"
+          confirmLabel="Mudar e Resetar"
+          onConfirm={() => pendingMode && performModeChange(pendingMode)}
+          variant="destructive"
+        >
+          <p>
+            Trocar a modalidade irá resetar o jogo atual. Todo o progresso será
+            perdido. Deseja continuar?
+          </p>
+        </Modal>
 
         {/* Progresso */}
         <div className="mb-6 bg-card rounded-lg p-4 border-2 border-border">
@@ -190,9 +314,9 @@ export default function SortPage() {
                   key={index}
                   className={`aspect-square flex items-center justify-center font-bold text-xs sm:text-sm rounded border-2 ${
                     num === sortState.currentNumber
-                      ? "bg-warning border-warning text-warning-foreground scale-110"
+                      ? "bg-warning border-warning text-warning-foreground scale-110 shadow-lg z-10"
                       : "bg-muted text-foreground border-border"
-                  } transition-all`}
+                  } transition-all duration-300`}
                 >
                   {mode === "75" ? getNumberWithLetter(num) : num}
                 </div>

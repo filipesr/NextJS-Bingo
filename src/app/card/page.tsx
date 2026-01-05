@@ -7,6 +7,7 @@ import type { BingoMode } from "@/lib/bingo/types";
 import { generateRandomCard75, generateRandomCard90 } from "@/lib/bingo/generator-cards";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Collapsible } from "@/components/ui/Collapsible";
+import { useToast } from "@/hooks/useToast";
 
 /**
  * Página de geração de cartelas aleatórias
@@ -14,6 +15,7 @@ import { Collapsible } from "@/components/ui/Collapsible";
  */
 export default function CardGeneratorPage() {
   const router = useRouter();
+  const { error } = useToast();
   const [isGenerating, setIsGenerating] = useState(false);
 
   const handleGenerate = (mode: BingoMode) => {
@@ -23,7 +25,7 @@ export default function CardGeneratorPage() {
     const card = mode === "75" ? generateRandomCard75() : generateRandomCard90();
 
     if (!card) {
-      alert("Erro ao gerar cartela. Tente novamente.");
+      error("Erro ao gerar cartela. Tente novamente.");
       setIsGenerating(false);
       return;
     }
