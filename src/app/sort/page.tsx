@@ -30,9 +30,19 @@ export default function SortPage() {
   const [isModeModalOpen, setIsModeModalOpen] = useState(false);
   const [pendingMode, setPendingMode] = useState<BingoMode | null>(null);
 
-  // Efeito para falar o número sorteado
+  const [isRolling, setIsRolling] = useState(false);
+  const [displayNumber, setDisplayNumber] = useState<number | null>(null);
+
+  // Efeito para sincronizar o número exibido quando NÃO está rolando
   useEffect(() => {
-    if (sortState.currentNumber) {
+    if (!isRolling) {
+      setDisplayNumber(sortState.currentNumber);
+    }
+  }, [sortState.currentNumber, isRolling]);
+
+  // Efeito para falar o número sorteado (apenas quando terminar de rolar)
+  useEffect(() => {
+    if (sortState.currentNumber && !isRolling) {
       const call = getNumberCall(sortState.currentNumber, mode);
       const letter = mode === "75" ? getNumberWithLetter(sortState.currentNumber).charAt(0) : "";
       
@@ -49,7 +59,7 @@ export default function SortPage() {
       
       speak(text);
     }
-  }, [sortState.currentNumber, mode, speak]);
+  }, [sortState.currentNumber, mode, speak, isRolling]);
 
   const handleResetClick = () => {
     if (sortState.drawnNumbers.length > 0) {
@@ -57,6 +67,31 @@ export default function SortPage() {
     } else {
       performReset();
     }
+  };
+
+  const handleDraw = () => {
+    if (!hasMoreNumbers || isRolling) return;
+
+    setIsRolling(true);
+    let counter = 0;
+    const maxDuration = 1500; // 1.5s duration
+    const intervalTime = 80; // Update every 80ms
+
+    const interval = setInterval(() => {
+      // Show random number from available range just for visual effect
+      // We don't use sortState.availableNumbers here to avoid peeking logic complexity
+      // Just random 1-75 or 1-90 is fine for the effect
+      const max = mode === "75" ? 75 : 90;
+      const randomNum = Math.floor(Math.random() * max) + 1;
+      setDisplayNumber(randomNum);
+
+      counter += intervalTime;
+      if (counter >= maxDuration) {
+        clearInterval(interval);
+        draw(); // Actually draw the real number
+        setIsRolling(false);
+      }
+    }, intervalTime);
   };
 
   const performReset = () => {
@@ -166,18 +201,18 @@ export default function SortPage() {
               : "Aguardando Sorteio..."}
           </h2>
           <div className="text-center relative z-10">
-            {sortState.currentNumber ? (
-              <div key={sortState.currentNumber} className="animate-in zoom-in fade-in duration-300">
-                <div className="text-9xl font-black drop-shadow-xl tracking-tighter text-warning-foreground">
-                  {mode === "75"
-                    ? getNumberWithLetter(sortState.currentNumber)
-                    : sortState.currentNumber}
+            {displayNumber ? (
+              <div key={displayNumber} className={isRolling ? "scale-110 transition-transform duration-75" : "animate-in zoom-in fade-in duration-300"}>
+                <div className={`text-9xl font-black drop-shadow-xl tracking-tighter ${isRolling ? "text-warning-foreground/70 blur-[1px]" : "text-foreground dark:text-warning"}`}>
+                  {mode === "75" && !isRolling
+                    ? getNumberWithLetter(displayNumber)
+                    : displayNumber}
                 </div>
 
-                {/* Apelido/chamada do número */}
-                {getNumberCall(sortState.currentNumber, mode) && (
-                  <div className="text-3xl mt-4 italic font-medium text-warning-foreground/90">
-                    &quot;{getNumberCall(sortState.currentNumber, mode)}&quot;
+                {/* Apelido/chamada do número - Só mostra quando parar */}
+                {!isRolling && getNumberCall(displayNumber, mode) && (
+                  <div className="text-3xl mt-4 italic font-medium text-foreground/80 dark:text-warning/90">
+                    &quot;{getNumberCall(displayNumber, mode)}&quot;
                   </div>
                 )}
               </div>
@@ -209,15 +244,20 @@ export default function SortPage() {
         {/* Controles */}
         <div className="mb-6 flex gap-4">
           <button
-            onClick={draw}
-            disabled={!hasMoreNumbers}
+            onClick={handleDraw}
+            disabled={!hasMoreNumbers || isRolling}
             className="flex-1 bg-success hover:bg-success/90 disabled:bg-muted disabled:cursor-not-allowed text-success-foreground font-bold py-4 px-6 rounded-lg text-xl transition-all active:scale-95 shadow-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           >
-            {hasMoreNumbers ? "🎲 Sortear Próximo" : "Sem Mais Números"}
+            {isRolling 
+              ? "🎲 Sorteando..." 
+              : hasMoreNumbers 
+                ? "🎲 Sortear Próximo" 
+                : "Sem Mais Números"}
           </button>
           <button
             onClick={handleResetClick}
-            className="bg-destructive hover:bg-destructive/90 text-destructive-foreground font-bold py-4 px-6 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
+            disabled={isRolling}
+            className="bg-destructive hover:bg-destructive/90 disabled:opacity-50 text-destructive-foreground font-bold py-4 px-6 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring shadow-md"
           >
             🔄 Resetar
           </button>
