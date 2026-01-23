@@ -7,6 +7,7 @@ import type { BingoMode } from "@/lib/bingo/types";
 import { generateRandomCard75, generateRandomCard90 } from "@/lib/bingo/generator-cards";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Collapsible } from "@/components/ui/Collapsible";
+import { AdBanner } from "@/components/AdBanner";
 import { useToast } from "@/hooks/useToast";
 
 /**
@@ -125,6 +126,11 @@ export default function CardGeneratorPage() {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Anuncio */}
+        <div className="mt-8 flex justify-center">
+          <AdBanner slot="1719513331" format="rectangle" />
         </div>
 
         {/* Informações Adicionais */}

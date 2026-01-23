@@ -8,6 +8,7 @@ import { BingoCard90Component } from "@/components/BingoCard/BingoCard90";
 import { StatsPanel } from "@/components/StatsPanel/StatsPanel";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Collapsible } from "@/components/ui/Collapsible";
+import { AdBanner } from "@/components/AdBanner";
 import { useWakeLock } from "@/hooks/useWakeLock";
 import { Confetti } from "@/components/ui/Confetti";
 
@@ -155,6 +156,11 @@ export default function CardPage({ params }: PageProps) {
           <div>
             <h2 className="font-semibold text-lg mb-3">📊 Estatísticas</h2>
             <StatsPanel stats={stats} drawnNumbers={drawnNumbers} />
+
+            {/* Anuncio */}
+            <div className="mt-6 flex justify-center">
+              <AdBanner slot="8013814160" format="rectangle" />
+            </div>
           </div>
         </div>
 

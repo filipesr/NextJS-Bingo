@@ -14,6 +14,7 @@ import { useToast } from "@/hooks/useToast";
 import { Modal } from "@/components/ui/Modal";
 import { CardTrackerSidebar } from "@/components/CardTracker";
 import { DrawnNumbersSidebar } from "@/components/DrawnNumbersSidebar";
+import { AdBanner } from "@/components/AdBanner";
 import { clearCardTrackerState } from "@/lib/storage/localStorage";
 
 /**
@@ -393,6 +394,11 @@ export default function SortPage() {
               }}
             />
           </div>
+        </div>
+
+        {/* Anuncio */}
+        <div className="mb-6">
+          <AdBanner slot="5551302357" format="horizontal" />
         </div>
 
         {/* Instruções */}

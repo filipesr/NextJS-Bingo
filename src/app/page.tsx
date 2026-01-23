@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Collapsible } from "@/components/ui/Collapsible";
+import { AdBanner } from "@/components/AdBanner";
 
 export default function Home() {
   return (
@@ -65,6 +66,11 @@ export default function Home() {
             </Link>
           </div>
         </section>
+
+        {/* Anuncio */}
+        <div className="mb-12 flex justify-center">
+          <AdBanner slot="8013814160" format="rectangle" />
+        </div>
 
         {/* Regras do Jogo */}
         <section className="mb-12">
