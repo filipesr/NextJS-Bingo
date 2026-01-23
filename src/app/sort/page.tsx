@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, useCallback } from "react";
 import Link from "next/link";
 import type { BingoMode } from "@/lib/bingo/types";
 import { useBingoSort } from "@/hooks/useBingoSort";
@@ -12,6 +12,9 @@ import { useSpeech } from "@/hooks/useSpeech";
 import { useToast } from "@/hooks/useToast";
 
 import { Modal } from "@/components/ui/Modal";
+import { CardTrackerSidebar } from "@/components/CardTracker";
+import { DrawnNumbersSidebar } from "@/components/DrawnNumbersSidebar";
+import { clearCardTrackerState } from "@/lib/storage/localStorage";
 
 /**
  * Página de sorteio de números do Bingo
@@ -19,7 +22,7 @@ import { Modal } from "@/components/ui/Modal";
  */
 export default function SortPage() {
   const [mode, setMode] = useState<BingoMode>("75");
-  const [sortOrder, setSortOrder] = useState<"chronological" | "numerical">("chronological");
+  const [animationEnabled, setAnimationEnabled] = useState(true);
   const { sortState, draw, reset, changeMode, hasMoreNumbers, drawnCount, totalNumbers } =
     useBingoSort(mode);
 
@@ -29,6 +32,10 @@ export default function SortPage() {
   const [isResetModalOpen, setIsResetModalOpen] = useState(false);
   const [isModeModalOpen, setIsModeModalOpen] = useState(false);
   const [pendingMode, setPendingMode] = useState<BingoMode | null>(null);
+  const [clearCardsOnReset, setClearCardsOnReset] = useState(false);
+
+  // Verificar se o jogo ja comecou (tem numeros sorteados)
+  const hasGameStarted = sortState.drawnNumbers.length > 0;
 
   const [isRolling, setIsRolling] = useState(false);
   const [displayNumber, setDisplayNumber] = useState<number | null>(null);
@@ -45,33 +52,33 @@ export default function SortPage() {
     if (sortState.currentNumber && !isRolling) {
       const call = getNumberCall(sortState.currentNumber, mode);
       const letter = mode === "75" ? getNumberWithLetter(sortState.currentNumber).charAt(0) : "";
-      
+
       let text = "";
       if (mode === "75") {
         text = `${letter}, ${sortState.currentNumber}`;
       } else {
         text = `${sortState.currentNumber}`;
       }
-      
+
       if (call) {
         text += `. ${call}`;
       }
-      
+
       speak(text);
     }
   }, [sortState.currentNumber, mode, speak, isRolling]);
 
-  const handleResetClick = () => {
-    if (sortState.drawnNumbers.length > 0) {
-      setIsResetModalOpen(true);
-    } else {
-      performReset();
-    }
-  };
-
-  const handleDraw = () => {
+  // Função de sorteio com animação
+  const handleDraw = useCallback(() => {
     if (!hasMoreNumbers || isRolling) return;
 
+    // Sem animacao - sorteia direto
+    if (!animationEnabled) {
+      draw();
+      return;
+    }
+
+    // Com animacao
     setIsRolling(true);
     let counter = 0;
     const maxDuration = 1500; // 1.5s duration
@@ -92,10 +99,40 @@ export default function SortPage() {
         setIsRolling(false);
       }
     }, intervalTime);
+  }, [hasMoreNumbers, isRolling, animationEnabled, mode, draw]);
+
+  // Atalho de teclado para sortear (Espaco)
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ignorar se estiver em input/textarea
+      if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) {
+        return;
+      }
+
+      if (e.code === "Space" && !isRolling && hasMoreNumbers) {
+        e.preventDefault();
+        handleDraw();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [isRolling, hasMoreNumbers, handleDraw]);
+
+  const handleResetClick = () => {
+    if (sortState.drawnNumbers.length > 0) {
+      setIsResetModalOpen(true);
+    } else {
+      performReset();
+    }
   };
 
   const performReset = () => {
     reset();
+    if (clearCardsOnReset) {
+      clearCardTrackerState();
+    }
+    setClearCardsOnReset(false);
     success("Jogo resetado com sucesso!");
   };
 
@@ -117,14 +154,6 @@ export default function SortPage() {
     setPendingMode(null);
   };
 
-  // Números ordenados conforme preferência do usuário
-  const displayedNumbers = useMemo(() => {
-    if (sortOrder === "numerical") {
-      return [...sortState.drawnNumbers].sort((a, b) => a - b);
-    }
-    return sortState.drawnNumbers;
-  }, [sortState.drawnNumbers, sortOrder]);
-
   // Últimos 5 números (excluindo o atual)
   const last5Numbers = useMemo(() => {
     const history = [...sortState.drawnNumbers];
@@ -134,7 +163,19 @@ export default function SortPage() {
 
   return (
     <main className="min-h-screen bg-background text-foreground">
-      <div className="container mx-auto px-4 py-8 max-w-4xl">
+      {/* Sidebar de numeros sorteados (esquerda) */}
+      <DrawnNumbersSidebar
+        drawnNumbers={sortState.drawnNumbers}
+        currentNumber={sortState.currentNumber}
+        mode={mode}
+        drawnCount={drawnCount}
+        totalNumbers={totalNumbers}
+      />
+
+      {/* Sidebar de rastreamento de cartelas (direita) */}
+      <CardTrackerSidebar />
+
+      <div className="container mx-auto px-4 py-8 max-w-4xl lg:pr-8">
         {/* Header */}
         <header className="flex justify-between items-center mb-8">
           <div>
@@ -147,12 +188,23 @@ export default function SortPage() {
             <h1 className="text-4xl font-bold">🎰 Sorteio de Bingo</h1>
           </div>
           <div className="flex gap-2">
+            <button
+              onClick={() => setAnimationEnabled(!animationEnabled)}
+              className={`p-2 rounded-full border-2 transition-colors ${
+                animationEnabled
+                  ? "bg-primary text-primary-foreground border-primary"
+                  : "bg-muted text-muted-foreground border-border"
+              }`}
+              title={animationEnabled ? "Desativar animacao" : "Ativar animacao"}
+            >
+              {animationEnabled ? "✨" : "⚡"}
+            </button>
             {speechSupported && (
               <button
                 onClick={toggleMute}
                 className={`p-2 rounded-full border-2 transition-colors ${
-                  isMuted 
-                    ? "bg-muted text-muted-foreground border-border" 
+                  isMuted
+                    ? "bg-muted text-muted-foreground border-border"
                     : "bg-primary text-primary-foreground border-primary"
                 }`}
                 title={isMuted ? "Ativar som" : "Desativar som"}
@@ -164,32 +216,48 @@ export default function SortPage() {
           </div>
         </header>
 
-        {/* Seletor de modalidade */}
-        <div className="mb-6 bg-card rounded-lg p-4 border-2 border-border">
-          <h2 className="font-semibold mb-3">Modalidade:</h2>
-          <div className="flex gap-4">
-            <button
-              onClick={() => handleModeChangeClick("75")}
-              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                mode === "75"
-                  ? "bg-[hsl(var(--bingo-75-header))] text-white"
-                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-              }`}
-            >
-              🇺🇸 Bingo 75 Bolas
-            </button>
-            <button
-              onClick={() => handleModeChangeClick("90")}
-              className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                mode === "90"
-                  ? "bg-[hsl(var(--bingo-90-header))] text-white"
-                  : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
-              }`}
-            >
-              🇬🇧 Bingo 90 Bolas
-            </button>
+        {/* Seletor de modalidade - oculto quando o jogo ja comecou */}
+        {!hasGameStarted && (
+          <div className="mb-6 bg-card rounded-lg p-4 border-2 border-border">
+            <h2 className="font-semibold mb-3">Modalidade:</h2>
+            <div className="flex gap-4">
+              <button
+                onClick={() => handleModeChangeClick("75")}
+                className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  mode === "75"
+                    ? "bg-[hsl(var(--bingo-75-header))] text-white"
+                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                }`}
+              >
+                Bingo 75 Bolas
+              </button>
+              <button
+                onClick={() => handleModeChangeClick("90")}
+                className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                  mode === "90"
+                    ? "bg-[hsl(var(--bingo-90-header))] text-white"
+                    : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                }`}
+              >
+                Bingo 90 Bolas
+              </button>
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Indicador de modo quando jogo em andamento */}
+        {hasGameStarted && (
+          <div className="mb-6 bg-card rounded-lg p-3 border-2 border-border flex items-center justify-between">
+            <span className="text-sm text-muted-foreground">Modalidade:</span>
+            <span className={`font-semibold px-3 py-1 rounded-lg text-white ${
+              mode === "75"
+                ? "bg-[hsl(var(--bingo-75-header))]"
+                : "bg-[hsl(var(--bingo-90-header))]"
+            }`}>
+              Bingo {mode} Bolas
+            </span>
+          </div>
+        )}
 
         {/* Display do número atual */}
         <div className="mb-6 bg-warning/20 rounded-lg p-8 border-4 border-warning shadow-xl relative overflow-hidden group">
@@ -266,16 +334,30 @@ export default function SortPage() {
         {/* Modals */}
         <Modal
           isOpen={isResetModalOpen}
-          onClose={() => setIsResetModalOpen(false)}
+          onClose={() => {
+            setIsResetModalOpen(false);
+            setClearCardsOnReset(false);
+          }}
           title="Resetar Jogo?"
           confirmLabel="Sim, Resetar"
           onConfirm={performReset}
           variant="destructive"
         >
-          <p>
-            Tem certeza que deseja resetar o jogo atual? Todo o progresso será
-            perdido.
-          </p>
+          <div className="space-y-4">
+            <p>
+              Tem certeza que deseja resetar o jogo atual? Todo o progresso sera
+              perdido.
+            </p>
+            <label className="flex items-center gap-2 cursor-pointer">
+              <input
+                type="checkbox"
+                checked={clearCardsOnReset}
+                onChange={(e) => setClearCardsOnReset(e.target.checked)}
+                className="w-4 h-4 rounded border-border text-primary focus:ring-primary"
+              />
+              <span className="text-sm">Limpar cartelas rastreadas tambem</span>
+            </label>
+          </div>
         </Modal>
 
         <Modal
@@ -313,58 +395,6 @@ export default function SortPage() {
           </div>
         </div>
 
-        {/* Histórico de números sorteados */}
-        <div className="bg-card rounded-lg p-6 border-2 border-border">
-          <div className="flex justify-between items-center mb-4">
-            <h2 className="font-semibold text-lg">
-              📝 Números Sorteados ({sortState.drawnNumbers.length})
-            </h2>
-
-            {sortState.drawnNumbers.length > 0 && (
-              <button
-                onClick={() => setSortOrder(prev =>
-                  prev === "chronological" ? "numerical" : "chronological"
-                )}
-                className="flex items-center gap-2 px-3 py-2 text-sm rounded-lg bg-secondary text-secondary-foreground hover:bg-secondary/80 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring border-2 border-border"
-                aria-label="Alternar ordenação dos números"
-              >
-                {sortOrder === "chronological" ? (
-                  <>
-                    <span>⏱️</span>
-                    <span className="hidden sm:inline">Ordem de chamada</span>
-                  </>
-                ) : (
-                  <>
-                    <span>🔢</span>
-                    <span className="hidden sm:inline">Ordem crescente</span>
-                  </>
-                )}
-              </button>
-            )}
-          </div>
-
-          {sortState.drawnNumbers.length === 0 ? (
-            <p className="text-center text-muted-foreground py-8">
-              Nenhum número sorteado ainda. Clique em &quot;Sortear Próximo&quot; para começar!
-            </p>
-          ) : (
-            <div className="grid grid-cols-6 sm:grid-cols-8 md:grid-cols-10 lg:grid-cols-12 gap-2">
-              {displayedNumbers.map((num, index) => (
-                <div
-                  key={index}
-                  className={`aspect-square flex items-center justify-center font-bold text-xs sm:text-sm rounded border-2 ${
-                    num === sortState.currentNumber
-                      ? "bg-warning border-warning text-warning-foreground scale-110 shadow-lg z-10"
-                      : "bg-muted text-foreground border-border"
-                  } transition-all duration-300`}
-                >
-                  {mode === "75" ? getNumberWithLetter(num) : num}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
         {/* Instruções */}
         <div className="mt-8">
           <Collapsible title="Como usar" icon="ℹ️" defaultOpen={false}>
@@ -373,16 +403,19 @@ export default function SortPage() {
                 1. Escolha a modalidade (75 ou 90 bolas)
               </li>
               <li>
-                2. Clique em &quot;Sortear Próximo&quot; para sortear cada número
+                2. Clique em &quot;Sortear Proximo&quot; ou pressione <kbd className="px-1.5 py-0.5 bg-muted rounded text-xs font-mono">Espaco</kbd> para sortear
               </li>
               <li>
-                3. Os números sorteados são salvos automaticamente
+                3. Os numeros sorteados ficam na barra lateral esquerda
               </li>
               <li>
-                4. Jogadores devem acessar suas cartelas usando códigos únicos (ex: /card/[código])
+                4. Use os botoes no topo para ativar/desativar animacao e som
               </li>
               <li>
-                5. Use &quot;Resetar&quot; para começar um novo jogo
+                5. Jogadores acessam cartelas via codigo unico (ex: /card/[codigo])
+              </li>
+              <li>
+                6. Use &quot;Resetar&quot; para comecar um novo jogo
               </li>
             </ul>
           </Collapsible>

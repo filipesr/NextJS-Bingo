@@ -90,10 +90,36 @@ export interface GameConfig {
   autoMark?: boolean; // Marcação automática (para futuras versões)
 }
 
+// Cartela rastreada na sidebar
+export interface TrackedCard {
+  id: string; // ID único (timestamp + random)
+  ownerName: string; // Nome do dono
+  cardCode: string; // Código da cartela
+  mode: BingoMode; // 75 ou 90
+  cardNumbers: number[]; // Números da cartela (flat array)
+  addedAt: number; // Timestamp
+}
+
+// Estado do rastreador (para localStorage)
+export interface CardTrackerState {
+  trackedCards: TrackedCard[];
+  lastUpdated: number;
+}
+
+// Status computado (runtime, não armazenado)
+export interface TrackedCardStatus {
+  card: TrackedCard;
+  markedNumbers: number[]; // Números já sorteados
+  unmarkedNumbers: number[]; // Números não sorteados
+  progress: number; // Porcentagem (0-100)
+  hasBingo: boolean; // Se ganhou
+}
+
 // LocalStorage keys
 export const STORAGE_KEYS = {
   SORT_STATE: "bingo_sort_state",
   CARD_MARKING: "bingo_card_marking_",
+  CARD_TRACKER: "bingo_card_tracker",
 } as const;
 
 // Constantes do jogo

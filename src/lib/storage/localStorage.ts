@@ -1,4 +1,4 @@
-import type { SortState, CardMarking } from "../bingo/types";
+import type { SortState, CardMarking, CardTrackerState } from "../bingo/types";
 import { STORAGE_KEYS } from "../bingo/types";
 
 /**
@@ -95,6 +95,49 @@ export function clearCardMarking(code: string): void {
 }
 
 /**
+ * Salva o estado do rastreador de cartelas no localStorage
+ *
+ * @param state - Estado do rastreador a ser salvo
+ */
+export function saveCardTrackerState(state: CardTrackerState): void {
+  try {
+    if (typeof window === "undefined") return;
+    localStorage.setItem(STORAGE_KEYS.CARD_TRACKER, JSON.stringify(state));
+  } catch (error) {
+    console.error("Erro ao salvar estado do rastreador:", error);
+  }
+}
+
+/**
+ * Carrega o estado do rastreador de cartelas do localStorage
+ *
+ * @returns Estado do rastreador ou null se não encontrado
+ */
+export function loadCardTrackerState(): CardTrackerState | null {
+  try {
+    if (typeof window === "undefined") return null;
+    const data = localStorage.getItem(STORAGE_KEYS.CARD_TRACKER);
+    if (!data) return null;
+    return JSON.parse(data) as CardTrackerState;
+  } catch (error) {
+    console.error("Erro ao carregar estado do rastreador:", error);
+    return null;
+  }
+}
+
+/**
+ * Limpa o estado do rastreador de cartelas do localStorage
+ */
+export function clearCardTrackerState(): void {
+  try {
+    if (typeof window === "undefined") return;
+    localStorage.removeItem(STORAGE_KEYS.CARD_TRACKER);
+  } catch (error) {
+    console.error("Erro ao limpar estado do rastreador:", error);
+  }
+}
+
+/**
  * Limpa todos os dados do Bingo do localStorage
  */
 export function clearAllBingoData(): void {
@@ -103,6 +146,9 @@ export function clearAllBingoData(): void {
 
     // Limpar estado do sorteio
     clearSortState();
+
+    // Limpar estado do rastreador de cartelas
+    clearCardTrackerState();
 
     // Limpar todas as marcações de cartelas
     const keys = Object.keys(localStorage);
